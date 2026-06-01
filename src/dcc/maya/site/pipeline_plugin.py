@@ -12,9 +12,9 @@ from maya.api.OpenMaya import MObject
 
 log = logging.getLogger("dcc.maya.pipeline_plugin")
 
-PLUGIN_DISPLAY_NAME = "Sandwich Pipeline"
-COMMAND_PREFIX = "SKD_"
-HOTKEY_SET_NAME = "Sandwich_Pipeline"
+PLUGIN_DISPLAY_NAME = "Lantern Pipeline"
+COMMAND_PREFIX = "LoS_"
+HOTKEY_SET_NAME = "Lantern_Pipeline"
 
 CUSTOM_HOTKEYS_TO_ADD: dict[str, str] = {"CreateMotionTrail": "ctrl+alt+m"}
 

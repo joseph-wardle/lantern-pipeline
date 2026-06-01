@@ -41,9 +41,9 @@ class HEnvFileManager(HFileManager):
         hou.setContextOption("ENVIRON", environment.name)
 
         try:
-            nodelayouts.ensure_skd_layout()
+            nodelayouts.ensure_los_layout()
         except Exception:
-            log.exception("Failed to ensure SKD layout for %s", environment.name)
+            log.exception("Failed to ensure LoS layout for %s", environment.name)
 
     def _setup_file(self, path: Path, entity: SGEntity) -> None:
         super()._setup_file(path, entity)

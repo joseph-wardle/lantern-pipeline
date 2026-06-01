@@ -27,6 +27,6 @@ class DBWorker(QtCore.QObject):
 
     def get_rig_data(self) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
         characters = self.get_asset_by_type(type="Character")
-        props = self.get_asset_by_tag(tag="SKD_02_rigged_asset")
+        props = self.get_asset_by_tag(tag="LoS_02_rigged_asset")
         self.rigs_loaded.emit(characters, props)
         return (characters, props)

@@ -55,7 +55,7 @@ class PrevisPlayblastDialog(MPlayblastDialog):
         )
 
     def __init__(self, parent) -> None:
-        super().__init__(parent, windowTitle="SKD Previs Playblast")
+        super().__init__(parent, windowTitle="LoS Previs Playblast")
 
     def _default_destination_enabled(self, location: SaveLocation) -> bool:
         return location.name == self.SAVE_LOCS.EDIT.name

@@ -77,7 +77,7 @@ def export_lights():
 
 ################################### Nungeon buttons (Sidebar) ###################################
 toolbar = nuke.menu("Nodes")
-m = toolbar.addMenu("SKD", icon="MicrowaveIcon.png")
+m = toolbar.addMenu("LoS", icon="MicrowaveIcon.png")
 
 
 m.addCommand(
@@ -126,12 +126,12 @@ m.addCommand("luma Distort", "nuke.createNode('lumaDistort')", icon="MicrowaveIc
 # lens node
 m.addCommand("Lens", "nuke.createNode('Lens')", icon="MicrowaveIcon.png")
 print(f"nuke.nodePaste({_TOOLSETS / 'shotTemplate.nk'})")
-m.addCommand("SKD Write Node", "make_bobo_write_node()", icon="MicrowaveIcon.png")
-m.addCommand("SKD Open Shot", "choose_shot()", icon="MicrowaveIcon.png")
-m.addCommand("SKD Read Node", "make_bobo_read_node()", icon="MicrowaveIcon.png")
+m.addCommand("LoS Write Node", "make_bobo_write_node()", icon="MicrowaveIcon.png")
+m.addCommand("LoS Open Shot", "choose_shot()", icon="MicrowaveIcon.png")
+m.addCommand("LoS Read Node", "make_bobo_read_node()", icon="MicrowaveIcon.png")
 
-m.addCommand("SKD FX Read", "make_bobo_fx_read_node()", icon="MicrowaveIcon.png")
-m.addCommand("SKD CFX Read", "make_bobo_cfx_read_node()", icon="MicrowaveIcon.png")
+m.addCommand("LoS FX Read", "make_bobo_fx_read_node()", icon="MicrowaveIcon.png")
+m.addCommand("LoS CFX Read", "make_bobo_cfx_read_node()", icon="MicrowaveIcon.png")
 
 m.addCommand("Build LPE Grade", "build_light_comp()", icon="MicrowaveIcon.png")
 m.addCommand("Export Light Grades", "export_lights()", icon="MicrowaveIcon.png")

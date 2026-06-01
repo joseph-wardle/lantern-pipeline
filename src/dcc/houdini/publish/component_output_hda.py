@@ -1,5 +1,5 @@
 """
-Callbacks for the SKD Component Output HDA.
+Callbacks for the LoS Component Output HDA.
 """
 
 from __future__ import annotations
@@ -174,7 +174,7 @@ def publish(node: hou.Node) -> Mapping[str, Any]:
     result = publish_component(node.path(), options, parent=parent)
     _write_status(node, title="Publish", payload=result)
     _apply_node_color(node, result)
-    _show_ui_message(result, title="SKD Publish")
+    _show_ui_message(result, title="LoS Publish")
     return result
 
 

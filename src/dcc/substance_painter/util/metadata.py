@@ -45,7 +45,7 @@ log = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-PIPE_SP_METADATA_CONTEXT = "skd_asset_pipeline"
+PIPE_SP_METADATA_CONTEXT = "los_asset_pipeline"
 """Substance Painter metadata context key for the asset pipeline."""
 
 PIPE_SP_METADATA_KEY = "asset_selection"

@@ -26,7 +26,7 @@ class MyWindow(QtWidgets.QWidget):
         shots_all = self.get_shots()
         self.parse_list(shots_all)
 
-        self.setWindowTitle("SKD Open Shot")
+        self.setWindowTitle("LoS Open Shot")
         self.setWindowFlags(
             self.windowFlags() | QtCore.Qt.WindowStaysOnTopHint
         )  # Keep on top

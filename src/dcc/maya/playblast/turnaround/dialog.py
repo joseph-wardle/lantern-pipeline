@@ -72,7 +72,7 @@ class AssetTurnaroundDialog(ButtonPair, QtWidgets.QMainWindow):
 
     def __init__(self, parent: QWidget | None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("SKD Asset Turnaround")
+        self.setWindowTitle("LoS Asset Turnaround")
         self._asset_metadata = self._read_asset_metadata()
         self._review_roots = resolve_turnaround_review_roots()
         self._destination_checkboxes: dict[str, QCheckBox] = {}

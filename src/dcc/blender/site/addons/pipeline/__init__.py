@@ -6,7 +6,7 @@ from bpy.utils import register_class, unregister_class
 from dcc.blender.assetfile import PipelineAssetProps
 from dcc.blender.util.register import get_decorated_classes, get_decorated_operators
 
-bl_info = {"name": "Sandwich Pipeline", "blender": (5, 0, 1), "category": "Pipeline"}
+bl_info = {"name": "Lantern Pipeline", "blender": (5, 0, 1), "category": "Pipeline"}
 
 registered_classes: set[
     type[

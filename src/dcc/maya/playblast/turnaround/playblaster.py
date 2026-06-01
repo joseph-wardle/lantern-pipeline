@@ -59,7 +59,7 @@ class MTurnaroundPlayblaster:
             steps.append("Capturing wireframe pass")
         steps += ["Assembling frames", "Encoding movies"]
 
-        with tempfile.TemporaryDirectory(prefix="skd_turnaround_") as temp_dir:
+        with tempfile.TemporaryDirectory(prefix="los_turnaround_") as temp_dir:
             temp_root = Path(temp_dir)
             shaded_base = temp_root / "turnaround_shaded"
             wireframe_base = temp_root / "turnaround_wireframe"

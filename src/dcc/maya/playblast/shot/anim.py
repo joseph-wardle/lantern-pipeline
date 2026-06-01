@@ -42,7 +42,7 @@ class AnimPlayblastDialog(MPlayblastDialog):
         )
 
     def __init__(self, parent) -> None:
-        super().__init__(parent, windowTitle="SKD Anim Playblast")
+        super().__init__(parent, windowTitle="LoS Anim Playblast")
 
     def _build_extra_source_options(self) -> QWidget | None:
         pass_row = QWidget()

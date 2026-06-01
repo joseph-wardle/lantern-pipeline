@@ -10,7 +10,7 @@ from argparse import ArgumentParser
 from framework.dispatch import find_implementation
 from framework.interface import DCCLauncher
 
-r"""Launch the BYU 2026 Capstone pipeline ("Sandwich Kwon Do")
+r"""Launch the BYU Capstone pipeline ("Lantern of Souls")
 
 With much credit to Scott Milner and the 2025 Capstone team.
 

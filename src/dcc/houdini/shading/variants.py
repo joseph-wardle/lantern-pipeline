@@ -1,4 +1,4 @@
-"""Variant discovery and planning for SKD Houdini component graphs.
+"""Variant discovery and planning for LoS Houdini component graphs.
 
 This module intentionally has no Houdini-node side effects. It discovers
 geometry/material publish variants and returns a deterministic build plan that

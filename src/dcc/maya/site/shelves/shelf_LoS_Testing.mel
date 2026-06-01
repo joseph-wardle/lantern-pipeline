@@ -1,4 +1,4 @@
-global proc shelf_SKD_Testing () {
+global proc shelf_LoS_Testing () {
     global string $gBuffStr;
     global string $gBuffStr0;
     global string $gBuffStr1;

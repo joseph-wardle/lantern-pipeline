@@ -1,4 +1,4 @@
-global proc shelf_SKD_Animation () {
+global proc shelf_LoS_Assets () {
     global string $gBuffStr;
     global string $gBuffStr0;
     global string $gBuffStr1;
@@ -9,32 +9,32 @@ global proc shelf_SKD_Animation () {
         -flexibleWidthType 3
         -flexibleWidthValue 32
         -enable 1
-        -width 39
+        -width 35
         -height 34
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Open Anim File"
+        -annotation "Model Checker"
         -enableBackground 0
         -backgroundColor 0 0 0
         -highlightColor 0.321569 0.521569 0.65098
         -align "center"
-        -label "OpenAnim"
+        -label "Model Chcker"
         -labelOffset 0
         -rotation 0
         -flipX 0
         -flipY 0
         -useAlpha 1
         -font "plainLabelFont"
-        -imageOverlayLabel "Open Anim"
+        -imageOverlayLabel "Checker"
         -overlayLabelColor 2.624876 0.801436 0.012446
         -overlayLabelBackColor 0.227129 0.227129 0.227129 0.5
-        -image "openLoadGeneric.png"
-        -image1 "openLoadGeneric.png"
+        -image "monocle.png"
+        -image1 "monocle.png"
         -style "iconOnly"
         -marginWidth 0
         -marginHeight 1
-        -command "from dcc.maya.shotfile import MAnimShotFileManager; fm = MAnimShotFileManager(); fm.open_file()"
+        -command "from dcc.maya.publish import ModelChecker; chck = ModelChecker.get(); chck.configure(); chck.show_UI();"
         -sourceType "python"
         -commandRepeatable 1
         -flat 1
@@ -49,7 +49,7 @@ global proc shelf_SKD_Animation () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Create a manual version of the current animation scene"
+        -annotation "Create a manual version of the current asset scene"
         -enableBackground 0
         -backgroundColor 0 0 0
         -highlightColor 0.321569 0.521569 0.65098
@@ -69,7 +69,7 @@ global proc shelf_SKD_Animation () {
         -style "iconOnly"
         -marginWidth 0
         -marginHeight 1
-        -command "from dcc.maya.shotfile import MAnimShotFileManager; MAnimShotFileManager().save_version_for_current_scene()"
+        -command "from dcc.maya.assetfile import MAssetFileManager; MAssetFileManager().save_version_for_current_scene()"
         -sourceType "python"
         -commandRepeatable 1
         -flat 1
@@ -84,7 +84,7 @@ global proc shelf_SKD_Animation () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Open version history for the current animation scene"
+        -annotation "Open version history for an asset model file"
         -enableBackground 0
         -backgroundColor 0 0 0
         -highlightColor 0.321569 0.521569 0.65098
@@ -104,7 +104,7 @@ global proc shelf_SKD_Animation () {
         -style "iconOnly"
         -marginWidth 0
         -marginHeight 1
-        -command "from dcc.maya.shotfile import MAnimShotFileManager; MAnimShotFileManager().open_version_browser()"
+        -command "from dcc.maya.assetfile import MAssetFileManager; MAssetFileManager().open_version_browser()"
         -sourceType "python"
         -commandRepeatable 1
         -flat 1
@@ -119,26 +119,27 @@ global proc shelf_SKD_Animation () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Picker"
+        -annotation "Open or create an asset model file"
         -enableBackground 0
         -backgroundColor 0 0 0
         -highlightColor 0.321569 0.521569 0.65098
         -align "center"
-        -label "Pickers"
+        -label "Open Asset"
         -labelOffset 0
         -rotation 0
         -flipX 0
         -flipY 0
         -useAlpha 1
         -font "plainLabelFont"
+        -imageOverlayLabel "Open Asset"
         -overlayLabelColor 2.624876 0.801436 0.012446
         -overlayLabelBackColor 0.227129 0.227129 0.227129 0.5
-        -image "picker.svg"
-        -image1 "picker.svg"
+        -image "fileOpen.png"
+        -image1 "fileOpen.png"
         -style "iconOnly"
         -marginWidth 0
         -marginHeight 1
-        -command "import dcc.maya.util.picker; dcc.maya.util.picker.run()"
+        -command "from dcc.maya.assetfile import MAssetFileManager; MAssetFileManager().open_file()"
         -sourceType "python"
         -commandRepeatable 1
         -flat 1
@@ -153,147 +154,7 @@ global proc shelf_SKD_Animation () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Studio Library"
-        -enableBackground 0
-        -backgroundColor 0 0 0
-        -highlightColor 0.321569 0.521569 0.65098
-        -align "center"
-        -label "Studio Library"
-        -labelOffset 0
-        -rotation 0
-        -flipX 0
-        -flipY 0
-        -useAlpha 1
-        -font "plainLabelFont"
-        -imageOverlayLabel "Studio Library"
-        -overlayLabelColor 2.624876 0.801436 0.012446
-        -overlayLabelBackColor 0.227129 0.227129 0.227129 0.5
-        -image "logo_high.png"
-        -image1 "logo_high.png"
-        -style "iconOnly"
-        -marginWidth 0
-        -marginHeight 1
-        -command "import dcc.maya.util.studiolibrary; dcc.maya.util.studiolibrary.run()"
-        -sourceType "python"
-        -commandRepeatable 1
-        -flat 1
-    ;
-    shelfButton
-        -enableCommandRepeat 1
-        -flexibleWidthType 3
-        -flexibleWidthValue 32
-        -enable 1
-        -width 35
-        -height 34
-        -manage 1
-        -visible 1
-        -preventOverride 0
-        -annotation "Dynamic Space Switch"
-        -enableBackground 0
-        -backgroundColor 0 0 0
-        -highlightColor 0.321569 0.521569 0.65098
-        -align "center"
-        -label "Dynamic_Space_Switch"
-        -labelOffset 0
-        -rotation 0
-        -flipX 0
-        -flipY 0
-        -useAlpha 1
-        -font "plainLabelFont"
-        -imageOverlayLabel "Sp Sw"
-        -overlayLabelColor 2.624876 0.801436 0.012446
-        -overlayLabelBackColor 0.227129 0.227129 0.227129 0.5
-        -image "createContainer.png"
-        -image1 "createContainer.png"
-        -style "iconOnly"
-        -marginWidth 0
-        -marginHeight 1
-        -command "import dcc.maya.util.space_switch as spsw; spsw.run()"
-        -sourceType "python"
-        -commandRepeatable 1
-        -flat 1
-    ;
-    shelfButton
-        -enableCommandRepeat 1
-        -flexibleWidthType 3
-        -flexibleWidthValue 32
-        -enable 1
-        -width 35
-        -height 34
-        -manage 1
-        -visible 1
-        -preventOverride 0
-        -annotation "Preview Textures"
-        -enableBackground 0
-        -backgroundColor 0 0 0
-        -highlightColor 0.321569 0.521569 0.65098
-        -align "center"
-        -label "Preview_Textures"
-        -labelOffset 0
-        -rotation 0
-        -flipX 0
-        -flipY 0
-        -useAlpha 1
-        -font "plainLabelFont"
-        -imageOverlayLabel "Textures"
-        -overlayLabelColor 2.624876 0.801436 0.012446
-        -overlayLabelBackColor 0.227129 0.227129 0.227129 0.5
-        -image "createContainer.png"
-        -image1 "createContainer.png"
-        -style "iconOnly"
-        -marginWidth 0
-        -marginHeight 1
-        -command "colorManagementFileRules -e -colorSpace ACEScg PNG; colorManagementFileRules -save; generateAllUvTilePreviews;"
-        -sourceType "mel"
-        -commandRepeatable 1
-        -flat 1
-    ;
-    shelfButton
-        -enableCommandRepeat 1
-        -flexibleWidthType 3
-        -flexibleWidthValue 32
-        -enable 1
-        -width 35
-        -height 34
-        -manage 1
-        -visible 1
-        -preventOverride 0
-        -annotation "Anim Playblast"
-        -enableBackground 0
-        -backgroundColor 0 0 0
-        -highlightColor 0.321569 0.521569 0.65098
-        -align "center"
-        -label "Playblast"
-        -labelOffset 0
-        -rotation 0
-        -flipX 0
-        -flipY 0
-        -useAlpha 1
-        -font "plainLabelFont"
-        -imageOverlayLabel "Anim Playblast"
-        -overlayLabelColor 2.624876 0.801436 0.012446
-        -overlayLabelBackColor 0.227129 0.227129 0.227129 0.5
-        -image "playblast.png"
-        -image1 "playblast.png"
-        -style "iconOnly"
-        -marginWidth 0
-        -marginHeight 1
-        -command "from dcc.maya.playblast import AnimPlayblastDialog; from dcc.maya.runtime import get_main_qt_window; AnimPlayblastDialog(get_main_qt_window()).show();"
-        -sourceType "python"
-        -commandRepeatable 1
-        -flat 1
-    ;
-    shelfButton
-        -enableCommandRepeat 1
-        -flexibleWidthType 3
-        -flexibleWidthValue 32
-        -enable 1
-        -width 39
-        -height 34
-        -manage 1
-        -visible 1
-        -preventOverride 0
-        -annotation "Anim Publish"
+        -annotation "Tool for L&D asset publishing"
         -enableBackground 0
         -backgroundColor 0 0 0
         -highlightColor 0.321569 0.521569 0.65098
@@ -305,15 +166,15 @@ global proc shelf_SKD_Animation () {
         -flipY 0
         -useAlpha 1
         -font "plainLabelFont"
-        -imageOverlayLabel "Anim Publish"
+        -imageOverlayLabel "Publish Asset"
         -overlayLabelColor 2.624876 0.801436 0.012446
         -overlayLabelBackColor 0.227129 0.227129 0.227129 0.5
-        -image "publish.png"
-        -image1 "publish.png"
+        -image "envelope.png"
+        -image1 "envelope.png"
         -style "iconOnly"
         -marginWidth 0
         -marginHeight 1
-        -command "from dcc.maya.publish import AnimPublisher; AnimPublisher().publish();"
+        -command "from dcc.maya.publish import AssetPublisher; AssetPublisher().publish();"
         -sourceType "python"
         -commandRepeatable 1
         -flat 1
@@ -328,54 +189,19 @@ global proc shelf_SKD_Animation () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Splined Publish"
+        -annotation "Rig Export"
         -enableBackground 0
         -backgroundColor 0 0 0
         -highlightColor 0.321569 0.521569 0.65098
         -align "center"
-        -label "Spline Publish"
+        -label "Rig Export"
         -labelOffset 0
         -rotation 0
         -flipX 0
         -flipY 0
         -useAlpha 1
         -font "plainLabelFont"
-        -imageOverlayLabel "Spline"
-        -overlayLabelColor 2.624876 0.801436 0.012446
-        -overlayLabelBackColor 0.227129 0.227129 0.227129 0.5
-        -image "splineTangent.png"
-        -image1 "splineTangent.png"
-        -style "iconOnly"
-        -marginWidth 0
-        -marginHeight 1
-        -command "from dcc.maya.publish import AnimPublisher\nAnimPublisher(spline_publish=True).publish()"
-        -sourceType "python"
-        -commandRepeatable 1
-        -flat 1
-    ;
-    shelfButton
-        -enableCommandRepeat 1
-        -flexibleWidthType 3
-        -flexibleWidthValue 32
-        -enable 1
-        -width 35
-        -height 34
-        -manage 1
-        -visible 1
-        -preventOverride 0
-        -annotation "Wrangler"
-        -enableBackground 0
-        -backgroundColor 0 0 0
-        -highlightColor 0.321569 0.521569 0.65098
-        -align "center"
-        -label "Wrangler"
-        -labelOffset 0
-        -rotation 0
-        -flipX 0
-        -flipY 0
-        -useAlpha 1
-        -font "plainLabelFont"
-        -imageOverlayLabel "Wrangler"
+        -imageOverlayLabel "Rig Export"
         -overlayLabelColor 2.624876 0.801436 0.012446
         -overlayLabelBackColor 0.227129 0.227129 0.227129 0.5
         -image "createContainer.png"
@@ -383,7 +209,7 @@ global proc shelf_SKD_Animation () {
         -style "iconOnly"
         -marginWidth 0
         -marginHeight 1
-        -command "import dcc.maya.wrangler; dcc.maya.wrangler.run()"
+        -command "from dcc.maya.publish import RigPublisher; RigPublisher().publish();"
         -sourceType "python"
         -commandRepeatable 1
         -flat 1
@@ -398,27 +224,27 @@ global proc shelf_SKD_Animation () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "File Snapshot and Autosave Tool"
+        -annotation "Turnaround"
         -enableBackground 0
         -backgroundColor 0 0 0
         -highlightColor 0.321569 0.521569 0.65098
         -align "center"
-        -label "Aperture"
+        -label "Turnaround"
         -labelOffset 0
         -rotation 0
         -flipX 0
         -flipY 0
         -useAlpha 1
         -font "plainLabelFont"
-        -imageOverlayLabel "Aperture"
-        -overlayLabelColor 1.1914 0.7988 0.3944
-        -overlayLabelBackColor 0.172974 0.169201 0.166475 0.5
-        -image "vortexField.svg"
-        -image1 "vortexField.svg"
+        -imageOverlayLabel "Turnaround"
+        -overlayLabelColor 2.624876 0.801436 0.012446
+        -overlayLabelBackColor 0.227129 0.227129 0.227129 0.5
+        -image "turnaround.svg"
+        -image1 "turnaround.svg"
         -style "iconOnly"
         -marginWidth 0
         -marginHeight 1
-        -command "import aperture\naperture.ui.launch()"
+        -command "from dcc.maya.util.turnaround import show_turnaround_dialog; show_turnaround_dialog()"
         -sourceType "python"
         -commandRepeatable 1
         -flat 1
@@ -433,27 +259,61 @@ global proc shelf_SKD_Animation () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Crank Shot Sculpt Tool"
+        -annotation "Import a character as a scale reference"
         -enableBackground 0
         -backgroundColor 0 0 0
         -highlightColor 0.321569 0.521569 0.65098
         -align "center"
-        -label "Crank"
+        -label "Scale Reference"
         -labelOffset 0
         -rotation 0
         -flipX 0
         -flipY 0
         -useAlpha 1
         -font "plainLabelFont"
-        -imageOverlayLabel "Crank"
-        -overlayLabelColor 2.6968 0.8089 0.1076
-        -overlayLabelBackColor 0 0 0 0.1
-        -image "mgear_crank.svg"
-        -image1 "mgear_crank.svg"
+        -imageOverlayLabel "Scale Ref"
+        -overlayLabelColor 2.624876 0.801436 0.012446
+        -overlayLabelBackColor 0.227129 0.227129 0.227129 0.5
+        -image "yoon.svg"
+        -image1 "yoon.svg"
         -style "iconOnly"
         -marginWidth 0
         -marginHeight 1
-        -command "from mgear.crank import crank_tool\ncrank_tool.openUI()"
+        -command "from dcc.maya.util.scale_reference import show_scale_reference_dialog; show_scale_reference_dialog()"
+        -sourceType "python"
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -flexibleWidthType 3
+        -flexibleWidthValue 32
+        -enable 1
+        -width 36
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Symmetry Heatmap"
+        -enableBackground 0
+        -backgroundColor 0 0 0
+        -highlightColor 0.321569 0.521569 0.65098
+        -align "center"
+        -label "Symmetry Heatmap"
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -font "plainLabelFont"
+        -overlayLabelColor 0.8 0.8 0.8
+        -overlayLabelBackColor 0 0 0 0.5
+        -image "symmetry-check.png"
+        -image1 "symmetry-check.png"
+        -style "iconOnly"
+        -marginWidth 0
+        -marginHeight 1
+        -command "from dcc.maya.symmetry import visualize_symmetry_of_selected\nvisualize_symmetry_of_selected()"
         -sourceType "python"
         -commandRepeatable 1
         -flat 1

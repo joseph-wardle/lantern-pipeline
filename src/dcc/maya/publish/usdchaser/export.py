@@ -63,7 +63,7 @@ class ChaserArgs:
 
 
 class ExportChaser(mayaUsdLib.ExportChaser):
-    ID: str = "SKD"
+    ID: str = "LoS"
 
     _chaser_args: ChaserArgs
     _dag_to_usd: mayaUsdLib.DagToUsdMap
@@ -89,7 +89,7 @@ class ExportChaser(mayaUsdLib.ExportChaser):
             self._post_export_cam()
         else:
             raise ValueError(
-                f"{self._chaser_args.mode} is not a valid SKD chaser mode."
+                f"{self._chaser_args.mode} is not a valid LoS chaser mode."
             )
         return True
 

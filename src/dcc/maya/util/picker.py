@@ -9,7 +9,7 @@ from dcc.maya.command import maya_command
 
 log = logging.getLogger(__name__)
 
-CUSTOM_PICKER_TITLE = "SKD Picker"
+CUSTOM_PICKER_TITLE = "LoS Picker"
 
 
 @contextmanager

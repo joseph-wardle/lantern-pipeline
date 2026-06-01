@@ -77,7 +77,7 @@ def run_headless_publish(
     turnaround: bool = False,
     fail_on_hook_error: bool = False,
 ) -> HeadlessPublishResult:
-    """Run headless SKD builder ensure/publish operations.
+    """Run headless LoS builder ensure/publish operations.
 
     Behavior:
     - Uses canonical asset builder path: `<asset_root>/asset_builder.hipnc`
@@ -144,12 +144,12 @@ def run_headless_publish(
     if ensure_requested:
         preexisting_outputs = _component_output_paths(stage)
         try:
-            builder = nodelayouts.ensure_managed_skd_component_builder(stage)
+            builder = nodelayouts.ensure_managed_los_component_builder(stage)
         except Exception as exc:
             _error(
                 result,
                 "EnsureBuilderFailed",
-                f"Failed to ensure managed SKD component builder: {exc}",
+                f"Failed to ensure managed LoS component builder: {exc}",
             )
             return _finalize(result)
 
@@ -157,7 +157,7 @@ def run_headless_publish(
             _error(
                 result,
                 "BuilderResolveFailed",
-                "ensure_managed_skd_component_builder returned no node.",
+                "ensure_managed_los_component_builder returned no node.",
             )
             return _finalize(result)
 
@@ -167,7 +167,7 @@ def run_headless_publish(
         )
         if should_regen:
             try:
-                warnings = nodelayouts.rebuild_managed_skd_variant_graph(builder)
+                warnings = nodelayouts.rebuild_managed_los_variant_graph(builder)
                 variant_graph_regenerated = True
             except Exception as exc:
                 _error(
@@ -189,7 +189,7 @@ def run_headless_publish(
             _error(
                 result,
                 "BuilderMissing",
-                "Cannot publish because no SKD Component Output node is available.",
+                "Cannot publish because no LoS Component Output node is available.",
             )
             return _finalize(result)
 
@@ -416,7 +416,7 @@ def _emit_result(result: HeadlessPublishResult) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Headless SKD Houdini asset-builder and publish runner."
+        description="Headless LoS Houdini asset-builder and publish runner."
     )
     parser.add_argument(
         "--asset-root", required=True, help="Absolute/relative asset root path."
@@ -440,7 +440,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--ensure-builder",
         action="store_true",
-        help="Ensure asset_builder.hipnc and one managed SKD builder exist.",
+        help="Ensure asset_builder.hipnc and one managed LoS builder exist.",
     )
     parser.add_argument(
         "--respect-existing",

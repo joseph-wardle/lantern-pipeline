@@ -1,4 +1,4 @@
-"""ShotGrid client for `sandwich-pipeline`.
+"""ShotGrid client for `lantern-pipeline`.
 
 This module is the single entry point for every pipeline interaction with
 ShotGrid (a.k.a. ShotGun Studio, a.k.a. Autodesk Flow Production Tracking

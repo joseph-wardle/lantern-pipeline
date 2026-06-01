@@ -1,4 +1,4 @@
-# `telemetry-backend/` — server-side stack for the sandwich pipeline
+# `telemetry-backend/` — server-side stack for the Lantern pipeline
 
 The pipeline's API for emitting telemetry lives in `src/core/telemetry/`
 and runs on artist workstations. This directory holds the receive side: the
@@ -83,7 +83,7 @@ press ^C to stop
 ```
 
 Open the Grafana URL, log in (default `admin` / `admin` on first boot;
-Grafana forces a password change), and the **Sandwich Pipeline → Tool
+Grafana forces a password change), and the **Lantern Pipeline → Tool
 health** dashboard is live.
 
 ## Concurrency model

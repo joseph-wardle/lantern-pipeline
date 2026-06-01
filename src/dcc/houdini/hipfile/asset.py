@@ -43,9 +43,9 @@ class HAssetFileManager(HFileManager):
             log.warning("Unable to set ASSET context option; asset name missing")
 
         try:
-            nodelayouts.ensure_managed_skd_component_builder()
+            nodelayouts.ensure_managed_los_component_builder()
         except Exception:
-            log.exception("Failed to ensure SKD Component Builder for %s", asset_name)
+            log.exception("Failed to ensure LoS Component Builder for %s", asset_name)
 
     def _prompt_asset_selection(self) -> Asset | None:
         asset_codes = sorted(

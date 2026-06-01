@@ -282,7 +282,7 @@ class Asset(SGEntity):
 
     @property
     def is_rigged(self) -> bool:
-        return self.tags is not None and "SKD_rigged" in self.tags
+        return self.tags is not None and "LoS_rigged" in self.tags
 
     def __attrs_post_init__(self) -> None:
         self.subdirectory = normalize_subdirectory(self.subdirectory)

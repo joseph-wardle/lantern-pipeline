@@ -13,35 +13,35 @@ from ..shading import variants
 
 """Node-graph builders for Houdini Solaris tools.
 
-This module defines the canonical SKD component builder entry points used by
+This module defines the canonical LoS component builder entry points used by
 tool shelves and headless build scripts.
 """
 
-SKD_LOOKDEV_TYPE = "skd::main::SKD_Lookdev::1.0"
-SKD_MATLIB_TYPE = "skd::main::SKD_MatLib::1.0"
-SKD_COMPONENT_OUTPUT_TYPE_CANDIDATES = (
+LOS_LOOKDEV_TYPE = "skd::main::SKD_Lookdev::1.0"
+LOS_MATLIB_TYPE = "skd::main::SKD_MatLib::1.0"
+LOS_COMPONENT_OUTPUT_TYPE_CANDIDATES = (
     "skd.main::Lop/skd_component_output::1.0",
     "skd.main::skd_component_output::1.0",
 )
-SKD_COMPONENT_OUTPUT_TOKEN = "skd_component_output"
-SKD_COMPONENT_GEOMETRY_NAME = "main"
-SKD_BUILDER_MANAGED_KEY = "pipe_skd_builder_managed"
-SKD_BUILDER_MANAGED_VALUE = "1"
-SKD_BUILDER_NODE_NAME = "skd_component_output"
-SKD_LAYOUT_MANAGED_KEY = "pipe_skd_layout_managed"
-SKD_LAYOUT_MANAGED_VALUE = "1"
-SKD_VARIANT_GRAPH_MANAGED_KEY = "pipe_skd_variant_graph_managed"
-SKD_VARIANT_GRAPH_MANAGED_VALUE = "1"
-SKD_VARIANT_GRAPH_OWNER_KEY = "pipe_skd_variant_graph_owner"
-SKD_VARIANT_WARNINGS_KEY = "pipe_skd_variant_graph_warnings"
-SKD_VARIANT_COMMENT_PREFIX = "SKD Variant Graph Warnings"
-SKD_PENDING_COMMENT_PREFIX = "Pending Variant:"
-SKD_VARIANT_BOX_PREFIX = "skd_variant_"
+LOS_COMPONENT_OUTPUT_TOKEN = "skd_component_output"
+LOS_COMPONENT_GEOMETRY_NAME = "main"
+LOS_BUILDER_MANAGED_KEY = "pipe_skd_builder_managed"
+LOS_BUILDER_MANAGED_VALUE = "1"
+LOS_BUILDER_NODE_NAME = "skd_component_output"
+LOS_LAYOUT_MANAGED_KEY = "pipe_skd_layout_managed"
+LOS_LAYOUT_MANAGED_VALUE = "1"
+LOS_VARIANT_GRAPH_MANAGED_KEY = "pipe_skd_variant_graph_managed"
+LOS_VARIANT_GRAPH_MANAGED_VALUE = "1"
+LOS_VARIANT_GRAPH_OWNER_KEY = "pipe_skd_variant_graph_owner"
+LOS_VARIANT_WARNINGS_KEY = "pipe_skd_variant_graph_warnings"
+LOS_VARIANT_COMMENT_PREFIX = "LoS Variant Graph Warnings"
+LOS_PENDING_COMMENT_PREFIX = "Pending Variant:"
+LOS_VARIANT_BOX_PREFIX = "skd_variant_"
 
 log = logging.getLogger(__name__)
 
 
-def _latest_skd_type(default_type: str) -> str:
+def _latest_los_type(default_type: str) -> str:
     """Return newest installed HDA matching default_type base, fallback to default."""
     base = default_type.rsplit("::", 1)[0]
     category = hou.lopNodeTypeCategory()
@@ -67,23 +67,23 @@ def _type_version_key(type_name: str) -> tuple[int, ...]:
 
 
 def _resolve_component_output_type() -> str | None:
-    """Return the preferred installed SKD Component Output node type."""
+    """Return the preferred installed LoS Component Output node type."""
     installed = list(hou.lopNodeTypeCategory().nodeTypes().keys())
 
-    for default_type in SKD_COMPONENT_OUTPUT_TYPE_CANDIDATES:
+    for default_type in LOS_COMPONENT_OUTPUT_TYPE_CANDIDATES:
         base = default_type.rsplit("::", 1)[0]
         family = [name for name in installed if name.startswith(base + "::")]
         if family:
             return max(family, key=_type_version_key)
 
-    matches = [name for name in installed if SKD_COMPONENT_OUTPUT_TOKEN in name.lower()]
+    matches = [name for name in installed if LOS_COMPONENT_OUTPUT_TOKEN in name.lower()]
     if matches:
         return max(matches, key=_type_version_key)
     return None
 
 
-def create_skd_matlib(parent: hou.Node, node_name: str | None = None) -> hou.Node:
-    node_type = _latest_skd_type(SKD_MATLIB_TYPE)
+def create_los_matlib(parent: hou.Node, node_name: str | None = None) -> hou.Node:
+    node_type = _latest_los_type(LOS_MATLIB_TYPE)
     if node_name:
         node = parent.createNode(node_type)
         node.setName(node_name, unique_name=True)
@@ -91,8 +91,8 @@ def create_skd_matlib(parent: hou.Node, node_name: str | None = None) -> hou.Nod
     return parent.createNode(node_type)
 
 
-def create_skd_lookdev(parent: hou.Node, node_name: str | None = None) -> hou.Node:
-    node_type = _latest_skd_type(SKD_LOOKDEV_TYPE)
+def create_los_lookdev(parent: hou.Node, node_name: str | None = None) -> hou.Node:
+    node_type = _latest_los_type(LOS_LOOKDEV_TYPE)
     if node_name:
         node = parent.createNode(node_type)
         node.setName(node_name, unique_name=True)
@@ -100,8 +100,8 @@ def create_skd_lookdev(parent: hou.Node, node_name: str | None = None) -> hou.No
     return parent.createNode(node_type)
 
 
-def ensure_managed_skd_component_builder(parent: hou.Node | None = None) -> hou.Node:
-    """Return exactly one managed SKD builder output, creating one if missing.
+def ensure_managed_los_component_builder(parent: hou.Node | None = None) -> hou.Node:
+    """Return exactly one managed LoS builder output, creating one if missing.
 
     This function is intentionally conservative:
     - It never deletes nodes.
@@ -114,28 +114,28 @@ def ensure_managed_skd_component_builder(parent: hou.Node | None = None) -> hou.
     if managed:
         if len(managed) > 1:
             for extra in managed[1:]:
-                extra.setUserData(SKD_BUILDER_MANAGED_KEY, "0")
+                extra.setUserData(LOS_BUILDER_MANAGED_KEY, "0")
             log.warning(
-                "Multiple managed SKD builders found in %s; using %s and unmarking extras",
+                "Multiple managed LoS builders found in %s; using %s and unmarking extras",
                 stage.path(),
                 managed[0].path(),
             )
         return managed[0]
 
-    existing = _find_existing_skd_builder_outputs(stage)
+    existing = _find_existing_los_builder_outputs(stage)
     if existing:
         adopted = existing[0]
         _mark_managed_builder(adopted)
         if len(existing) > 1:
             log.warning(
-                "Multiple SKD-like builders found in %s; adopting %s",
+                "Multiple LoS-like builders found in %s; adopting %s",
                 stage.path(),
                 adopted.path(),
             )
         return adopted
 
     # No managed or recognizable builder exists; create one.
-    output = create_skd_component_builder({}, parent=stage)
+    output = create_los_component_builder({}, parent=stage)
     _mark_managed_builder(output)
     return output
 
@@ -160,47 +160,47 @@ def _create_component_output_node(*, kwargs: dict, parent: hou.Node | None) -> h
     if parent is not None:
         if node_type:
             try:
-                return parent.createNode(node_type, SKD_BUILDER_NODE_NAME)
+                return parent.createNode(node_type, LOS_BUILDER_NODE_NAME)
             except hou.OperationFailed:
                 log.warning(
-                    "Failed to create SKD Component Output type %s; falling back to componentoutput",
+                    "Failed to create LoS Component Output type %s; falling back to componentoutput",
                     node_type,
                     exc_info=True,
                 )
         else:
             log.warning(
-                "SKD Component Output HDA is not installed; falling back to componentoutput"
+                "LoS Component Output HDA is not installed; falling back to componentoutput"
             )
-        return parent.createNode("componentoutput", SKD_BUILDER_NODE_NAME)
+        return parent.createNode("componentoutput", LOS_BUILDER_NODE_NAME)
 
     # Shelf tools may rely on genericTool kwargs insertion behavior.
     if node_type:
         try:
             created_node = cast(hou.Node, loptoolutils.genericTool(kwargs, node_type))
-            created_node.setName(SKD_BUILDER_NODE_NAME, unique_name=True)
+            created_node.setName(LOS_BUILDER_NODE_NAME, unique_name=True)
             return created_node
         except hou.OperationFailed:
             log.warning(
-                "Failed to create SKD Component Output type %s via shelf tool; falling back to componentoutput",
+                "Failed to create LoS Component Output type %s via shelf tool; falling back to componentoutput",
                 node_type,
                 exc_info=True,
             )
     else:
         log.warning(
-            "SKD Component Output HDA is not installed; shelf tool is creating stock componentoutput"
+            "LoS Component Output HDA is not installed; shelf tool is creating stock componentoutput"
         )
 
     fallback_node = cast(hou.Node, loptoolutils.genericTool(kwargs, "componentoutput"))
-    fallback_node.setName(SKD_BUILDER_NODE_NAME, unique_name=True)
+    fallback_node.setName(LOS_BUILDER_NODE_NAME, unique_name=True)
     return fallback_node
 
 
 def _is_component_output_like(node: hou.Node) -> bool:
     node_type = node.type().name().lower()
-    return node_type == "componentoutput" or SKD_COMPONENT_OUTPUT_TOKEN in node_type
+    return node_type == "componentoutput" or LOS_COMPONENT_OUTPUT_TOKEN in node_type
 
 
-def _is_skd_matlib_like(node: hou.Node) -> bool:
+def _is_los_matlib_like(node: hou.Node) -> bool:
     node_type = node.type().name().lower()
     return "skd_matlib" in node_type or "lnd_matlib" in node_type
 
@@ -210,21 +210,21 @@ def _find_managed_builder_outputs(stage: hou.Node) -> list[hou.Node]:
     for node in stage.children():
         if not _is_component_output_like(node):
             continue
-        if node.userData(SKD_BUILDER_MANAGED_KEY) == SKD_BUILDER_MANAGED_VALUE:
+        if node.userData(LOS_BUILDER_MANAGED_KEY) == LOS_BUILDER_MANAGED_VALUE:
             outputs.append(node)
     return outputs
 
 
-def _find_existing_skd_builder_outputs(stage: hou.Node) -> list[hou.Node]:
+def _find_existing_los_builder_outputs(stage: hou.Node) -> list[hou.Node]:
     outputs: list[hou.Node] = []
     for node in stage.children():
-        if not _looks_like_skd_builder_output(node):
+        if not _looks_like_los_builder_output(node):
             continue
         outputs.append(node)
     return outputs
 
 
-def _looks_like_skd_builder_output(node: hou.Node) -> bool:
+def _looks_like_los_builder_output(node: hou.Node) -> bool:
     if not _is_component_output_like(node):
         return False
 
@@ -260,13 +260,13 @@ def _looks_like_skd_builder_output(node: hou.Node) -> bool:
         "componentmaterial",
     }:
         return False
-    if not _is_skd_matlib_like(material_inputs[1]):
+    if not _is_los_matlib_like(material_inputs[1]):
         return False
     return True
 
 
 def _mark_managed_builder(output: hou.Node) -> None:
-    output.setUserData(SKD_BUILDER_MANAGED_KEY, SKD_BUILDER_MANAGED_VALUE)
+    output.setUserData(LOS_BUILDER_MANAGED_KEY, LOS_BUILDER_MANAGED_VALUE)
 
 
 def _set_parm_if_exists(node: hou.Node, parm_name: str, value) -> None:
@@ -277,8 +277,8 @@ def _set_parm_if_exists(node: hou.Node, parm_name: str, value) -> None:
 
 
 def _mark_managed_variant_node(node: hou.Node, *, owner_path: str) -> None:
-    node.setUserData(SKD_VARIANT_GRAPH_MANAGED_KEY, SKD_VARIANT_GRAPH_MANAGED_VALUE)
-    node.setUserData(SKD_VARIANT_GRAPH_OWNER_KEY, owner_path)
+    node.setUserData(LOS_VARIANT_GRAPH_MANAGED_KEY, LOS_VARIANT_GRAPH_MANAGED_VALUE)
+    node.setUserData(LOS_VARIANT_GRAPH_OWNER_KEY, owner_path)
 
 
 def _clear_managed_variant_nodes(
@@ -288,11 +288,11 @@ def _clear_managed_variant_nodes(
         if node.path() in keep_paths:
             continue
         if (
-            node.userData(SKD_VARIANT_GRAPH_MANAGED_KEY)
-            != SKD_VARIANT_GRAPH_MANAGED_VALUE
+            node.userData(LOS_VARIANT_GRAPH_MANAGED_KEY)
+            != LOS_VARIANT_GRAPH_MANAGED_VALUE
         ):
             continue
-        if node.userData(SKD_VARIANT_GRAPH_OWNER_KEY) not in ("", owner_path):
+        if node.userData(LOS_VARIANT_GRAPH_OWNER_KEY) not in ("", owner_path):
             continue
         node.destroy()
 
@@ -310,15 +310,15 @@ def _clear_managed_variant_boxes(parent: hou.Node, *, owner_path: str) -> None:
 
         try:
             managed = (
-                net_box_any.userData(SKD_VARIANT_GRAPH_MANAGED_KEY)
-                == SKD_VARIANT_GRAPH_MANAGED_VALUE
+                net_box_any.userData(LOS_VARIANT_GRAPH_MANAGED_KEY)
+                == LOS_VARIANT_GRAPH_MANAGED_VALUE
             )
-            owner = net_box_any.userData(SKD_VARIANT_GRAPH_OWNER_KEY)
+            owner = net_box_any.userData(LOS_VARIANT_GRAPH_OWNER_KEY)
         except Exception:
             managed = False
             owner = ""
 
-        if not managed and not box_name.startswith(SKD_VARIANT_BOX_PREFIX):
+        if not managed and not box_name.startswith(LOS_VARIANT_BOX_PREFIX):
             continue
         if managed and owner not in ("", owner_path):
             continue
@@ -340,16 +340,16 @@ def _create_managed_variant_box(
         return
     try:
         net_box = parent.createNetworkBox()
-        net_box.setName(f"{SKD_VARIANT_BOX_PREFIX}{name}", unique_name=True)
+        net_box.setName(f"{LOS_VARIANT_BOX_PREFIX}{name}", unique_name=True)
     except Exception:
         return
 
     net_box_any = cast(Any, net_box)
     try:
         net_box_any.setUserData(
-            SKD_VARIANT_GRAPH_MANAGED_KEY, SKD_VARIANT_GRAPH_MANAGED_VALUE
+            LOS_VARIANT_GRAPH_MANAGED_KEY, LOS_VARIANT_GRAPH_MANAGED_VALUE
         )
-        net_box_any.setUserData(SKD_VARIANT_GRAPH_OWNER_KEY, owner_path)
+        net_box_any.setUserData(LOS_VARIANT_GRAPH_OWNER_KEY, owner_path)
     except Exception:
         pass
 
@@ -400,7 +400,7 @@ def _create_managed_variant_box(
 
 
 def _set_variant_generation_warnings(node: hou.Node, warnings: list[str]) -> None:
-    node.setUserData(SKD_VARIANT_WARNINGS_KEY, json.dumps(warnings))
+    node.setUserData(LOS_VARIANT_WARNINGS_KEY, json.dumps(warnings))
 
     summary = node.parm("status_summary")
     payload = node.parm("status_json")
@@ -408,14 +408,14 @@ def _set_variant_generation_warnings(node: hou.Node, warnings: list[str]) -> Non
         preview = "; ".join(warnings[:3])
         if len(warnings) > 3:
             preview = f"{preview}; +{len(warnings) - 3} more"
-        node.setComment(f"{SKD_VARIANT_COMMENT_PREFIX} ({len(warnings)}): {preview}")
+        node.setComment(f"{LOS_VARIANT_COMMENT_PREFIX} ({len(warnings)}): {preview}")
         if summary is not None:
             summary.set(
                 f"Variant graph generated with {len(warnings)} warning(s). "
                 "See node comment or user data for details."
             )
     else:
-        if node.comment().startswith(SKD_VARIANT_COMMENT_PREFIX):
+        if node.comment().startswith(LOS_VARIANT_COMMENT_PREFIX):
             node.setComment("")
         if summary is not None:
             summary.set("Ready")
@@ -495,7 +495,7 @@ def lnd_clustersetup(kwargs: dict, parent: hou.Node | None = None) -> hou.Node:
     return out
 
 
-def create_skd_component_geometry(
+def create_los_component_geometry(
     kwargs: dict,
     parent: hou.Node | None = None,
     *,
@@ -503,14 +503,14 @@ def create_skd_component_geometry(
     geo_variant: str | None = None,
     source_expression: str | None = None,
 ) -> hou.Node:
-    """Create the standard SKD Component Geometry node setup."""
+    """Create the standard LoS Component Geometry node setup."""
     if parent:
         cgeo = parent.createNode("componentgeometry")
     else:
         cgeo = loptoolutils.genericTool(kwargs, "componentgeometry")
 
     # Rename to match publishing expectations.
-    cgeo.setName(node_name or SKD_COMPONENT_GEOMETRY_NAME, unique_name=True)
+    cgeo.setName(node_name or LOS_COMPONENT_GEOMETRY_NAME, unique_name=True)
 
     # Set up nodes inside of Component Geometry
     geo_sop = cgeo.node("./sopnet/geo")
@@ -548,7 +548,7 @@ def create_skd_component_geometry(
     return cgeo
 
 
-def create_skd_component_material(
+def create_los_component_material(
     kwargs: dict,
     parent: hou.Node | None = None,
     *,
@@ -557,7 +557,7 @@ def create_skd_component_material(
     variant_name: str | None = None,
     use_input_variant_expression: bool = True,
 ) -> hou.Node:
-    """Create the standard SKD Component Material configuration."""
+    """Create the standard LoS Component Material configuration."""
     TS_PRIMVAR = "texset"
 
     if parent:
@@ -745,11 +745,11 @@ def _first_managed_geometry_node(
         node
         for node in parent.children()
         if node.type().name() == "componentgeometry"
-        and node.userData(SKD_VARIANT_GRAPH_MANAGED_KEY)
-        == SKD_VARIANT_GRAPH_MANAGED_VALUE
+        and node.userData(LOS_VARIANT_GRAPH_MANAGED_KEY)
+        == LOS_VARIANT_GRAPH_MANAGED_VALUE
         and (
             owner_path is None
-            or node.userData(SKD_VARIANT_GRAPH_OWNER_KEY) == owner_path
+            or node.userData(LOS_VARIANT_GRAPH_OWNER_KEY) == owner_path
         )
     ]
     if not geometry_nodes:
@@ -772,13 +772,13 @@ def _set_node_bypass(node: hou.Node, enabled: bool) -> None:
 def _set_pending_state(node: hou.Node, *, pending: bool, reason: str = "") -> None:
     _set_node_bypass(node, pending)
     if pending:
-        node.setComment(f"{SKD_PENDING_COMMENT_PREFIX} {reason}")
+        node.setComment(f"{LOS_PENDING_COMMENT_PREFIX} {reason}")
         return
-    if node.comment().startswith(SKD_PENDING_COMMENT_PREFIX):
+    if node.comment().startswith(LOS_PENDING_COMMENT_PREFIX):
         node.setComment("")
 
 
-def rebuild_managed_skd_variant_graph(output: hou.Node) -> tuple[str, ...]:
+def rebuild_managed_los_variant_graph(output: hou.Node) -> tuple[str, ...]:
     """Rebuild a deterministic managed variant graph around an output node."""
     parent = output.parent()
     out_pos = output.position()
@@ -800,7 +800,7 @@ def rebuild_managed_skd_variant_graph(output: hou.Node) -> tuple[str, ...]:
     config.setName("config", unique_name=True)
     _mark_managed_variant_node(config, owner_path=owner_path)
 
-    lookdev = create_skd_lookdev(parent, "lookdev")
+    lookdev = create_los_lookdev(parent, "lookdev")
     _mark_managed_variant_node(lookdev, owner_path=owner_path)
 
     env = parent.createNode("fetch")
@@ -822,11 +822,11 @@ def rebuild_managed_skd_variant_graph(output: hou.Node) -> tuple[str, ...]:
         geo_token = variants.node_token(geo_plan.name)
         geo_name = variants.node_token(
             geo_plan.name,
-            fallback=SKD_COMPONENT_GEOMETRY_NAME,
+            fallback=LOS_COMPONENT_GEOMETRY_NAME,
         )
         branch_nodes: list[hou.Node] = []
 
-        geo_node = create_skd_component_geometry(
+        geo_node = create_los_component_geometry(
             {},
             parent=parent,
             node_name=geo_name,
@@ -861,14 +861,14 @@ def rebuild_managed_skd_variant_graph(output: hou.Node) -> tuple[str, ...]:
                 "material" if single_branch else f"material_{geo_token}_{mat_token}"
             )
 
-            matlib = create_skd_matlib(parent, matlib_name)
+            matlib = create_los_matlib(parent, matlib_name)
             _mark_managed_variant_node(matlib, owner_path=owner_path)
             branch_nodes.append(matlib)
             _set_matlib_variant_selection(
                 matlib, geo_variant=geo_plan.name, mat_variant=mat_variant
             )
 
-            cmat = create_skd_component_material(
+            cmat = create_los_component_material(
                 {},
                 parent=parent,
                 node_name=cmat_name,
@@ -960,14 +960,14 @@ def rebuild_managed_skd_variant_graph(output: hou.Node) -> tuple[str, ...]:
     return tuple(warnings)
 
 
-def create_skd_component_builder(
+def create_los_component_builder(
     kwargs: dict, parent: hou.Node | None = None
 ) -> hou.Node:
-    """Build the standard SKD Solaris component network."""
+    """Build the standard LoS Solaris component network."""
     out = _create_component_output_node(kwargs=kwargs, parent=parent)
     out.setColor(hou.Color((0.616, 0.871, 0.769)))
     _configure_component_output_defaults(out)
-    warnings = rebuild_managed_skd_variant_graph(out)
+    warnings = rebuild_managed_los_variant_graph(out)
 
     _mark_managed_builder(out)
 
@@ -981,7 +981,7 @@ def create_skd_component_builder(
 
     if warnings:
         log.warning(
-            "SKD Component Builder created with %d variant warning(s).",
+            "LoS Component Builder created with %d variant warning(s).",
             len(warnings),
         )
 
@@ -1050,8 +1050,8 @@ def skd_layoutgroup(kwargs: dict) -> hou.Node:
     return contextoptions
 
 
-def ensure_skd_layout(parent: hou.Node | None = None) -> hou.Node:
-    """Return the managed SKD layout node, creating one if missing.
+def ensure_los_layout(parent: hou.Node | None = None) -> hou.Node:
+    """Return the managed LoS layout node, creating one if missing.
 
     Conservative — never deletes or rewires artist-authored networks.
     Only creates a new layout when no managed one exists in /stage.
@@ -1059,11 +1059,11 @@ def ensure_skd_layout(parent: hou.Node | None = None) -> hou.Node:
     stage = _resolve_stage_context(parent)
 
     for node in stage.children():
-        if node.userData(SKD_LAYOUT_MANAGED_KEY) == SKD_LAYOUT_MANAGED_VALUE:
+        if node.userData(LOS_LAYOUT_MANAGED_KEY) == LOS_LAYOUT_MANAGED_VALUE:
             return node
 
     layout = skd_layout({}, parent=stage)
-    layout.setUserData(SKD_LAYOUT_MANAGED_KEY, SKD_LAYOUT_MANAGED_VALUE)
+    layout.setUserData(LOS_LAYOUT_MANAGED_KEY, LOS_LAYOUT_MANAGED_VALUE)
     return layout
 
 

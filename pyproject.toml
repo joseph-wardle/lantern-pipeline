@@ -89,7 +89,7 @@ replace-imports-with-any = [
 [tool.ty.environment]
 extra-paths = [
     "src/dcc/maya/third_party/",
-    "src/dcc/nuke/site/SKD_Tools/scripts",
+    "src/dcc/nuke/site/LoS_Tools/scripts",
     "src/",
 ]
 

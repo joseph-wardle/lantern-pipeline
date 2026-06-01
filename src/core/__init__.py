@@ -1,4 +1,4 @@
-"""Cross-DCC platform code for the sandwich pipeline.
+"""Cross-DCC platform code for the Lantern pipeline.
 
 `core` holds everything that is not tied to a specific DCC: domain models
 (asset, shot, environment, versioning, ShotGrid), shared UI helpers (ui),

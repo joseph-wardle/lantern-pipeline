@@ -1,4 +1,4 @@
-# `sandwich-pipeline` Coding Standard
+# `lantern-pipeline` Coding Standard
 
 Thanks for looking after this codebase! It’s been helpful to many and we hope to keep it tidy and easy to understand for those who use it in the future.
 

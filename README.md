@@ -1,12 +1,12 @@
-# sandwich-pipeline
+# lantern-pipeline
 
-An OS-agnostic, portable, extensible 3D pipeline for the BYU Center for Animation's 2027 Capstone film, *Sandwich Kwon Do*.
+An OS-agnostic, portable, extensible 3D pipeline for the BYU Center for Animation's Capstone game, *Lantern of Souls*.
 
-`sandwich-pipeline` is currently being used on EL9 and Windows 11 systems. It should also be functional on macOS systems, but that has not been tested.
+`lantern-pipeline` is currently being used on EL9 and Windows 11 systems. It should also be functional on macOS systems, but that has not been tested.
 
 ## Repo structure
 ```
-sandwich-pipeline/
+lantern-pipeline/
 ├── desktop_launchers      # .desktop files for the DCC launchers; installed via install_desktop_launchers.py
 ├── install_desktop_launchers.py
 ├── LICENSE
@@ -23,7 +23,7 @@ sandwich-pipeline/
 └── README.md
 ```
 
-## Setting up a copy of `sandwich-pipeline`
+## Setting up a copy of `lantern-pipeline`
 1. Fork this repo and clone it to the production location.
 1. Create an `src/env.py` file following the specifications in `src/env.py.md`. This will get things like ShotGrid auth set up, and provide OS-specific DCC executable paths.
 1. Run `uv sync` (or `.githooks/update-venv`) to set up the project environment.
@@ -41,8 +41,8 @@ sandwich-pipeline/
 1. Make a local copy of the git repo
    ```bash
    cd ~/Documents
-   git clone --recurse-submodules -c core.sshCommand='ssh -i ~/.ssh/github' git@github.com:joseph-wardle/sandwich-pipeline.git
-   cd sandwich-pipeline
+   git clone --recurse-submodules -c core.sshCommand='ssh -i ~/.ssh/github' git@github.com:joseph-wardle/lantern-pipeline.git
+   cd lantern-pipeline
    ```
 1. Configure the git repo to use the new SSH key and our git hooks
    ```bash
@@ -94,15 +94,16 @@ uv run ty check --no-progress
 
 ## Project lineage
 
-`sandwich-pipeline` is part of a long-running lineage of BYU Animation pipeline repositories. Each capstone pipeline has inherited ideas, conventions, tools, infrastructure, or hard-earned lessons from the projects before it, even when the implementation was largely rewritten.
+`lantern-pipeline` is part of a long-running lineage of BYU Animation pipeline repositories. Each capstone pipeline has inherited ideas, conventions, tools, infrastructure, or hard-earned lessons from the projects before it, even when the implementation was largely rewritten.
 
 A `*` indicates a substantial ground-up rewrite.
 
-- [`sandwich-pipeline`](https://github.com/joseph-wardle/sandwich-pipeline/tree/prod)
-  - descended from [`bobo-pipeline`](https://github.com/DallinClark/bobo-pipeline/tree/prod)
-    - descended from [`dungeon-pipeline`](https://github.com/scottdmilner/dungeon-pipeline/tree/prod) `*`
-      - descended from [`accomplice_pipe`](https://github.com/Student-Accomplice-Pipeline-Team/accomplice_pipe) `*`
-        - descended from [`unfamiliar_pipe`](https://github.com/gabrieljreed/unfamiliar_pipe) `*`
-          - descended from [`BYU_anm_pipeline`](https://github.com/smartins1234/BYU_anm_pipeline) `*`
-            - descended from [`dccpipe`](https://github.com/byu-animation/dccpipe/tree/master)
-              - descended from earlier BYU Animation pipeline projects in the [`byu-animation`](https://github.com/byu-animation) organization
+- [`lantern-pipeline`](https://github.com/joseph-wardle/lantern-pipeline/tree/prod)
+  - descended from [`sandwich-pipeline`](https://github.com/joseph-wardle/sandwich-pipeline/tree/prod)
+    - descended from [`bobo-pipeline`](https://github.com/DallinClark/bobo-pipeline/tree/prod)
+      - descended from [`dungeon-pipeline`](https://github.com/scottdmilner/dungeon-pipeline/tree/prod) `*`
+        - descended from [`accomplice_pipe`](https://github.com/Student-Accomplice-Pipeline-Team/accomplice_pipe) `*`
+          - descended from [`unfamiliar_pipe`](https://github.com/gabrieljreed/unfamiliar_pipe) `*`
+            - descended from [`BYU_anm_pipeline`](https://github.com/smartins1234/BYU_anm_pipeline) `*`
+              - descended from [`dccpipe`](https://github.com/byu-animation/dccpipe/tree/master)
+                - descended from earlier BYU Animation pipeline projects in the [`byu-animation`](https://github.com/byu-animation) organization

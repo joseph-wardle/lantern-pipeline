@@ -11,17 +11,17 @@ plugin_widgets: list[QtWidgets.QWidget | QtWidgets.QAction] = []
 
 def start_plugin():
     # Create text widget for menu (Open Asset)
-    open_action = QtWidgets.QAction("SKD — Open Asset")
+    open_action = QtWidgets.QAction("LoS — Open Asset")
     open_action.triggered.connect(launch_asset_opener)
 
-    save_version_action = QtWidgets.QAction("SKD — Save Version")
+    save_version_action = QtWidgets.QAction("LoS — Save Version")
     save_version_action.triggered.connect(launch_save_version)
 
-    version_history_action = QtWidgets.QAction("SKD — Version History")
+    version_history_action = QtWidgets.QAction("LoS — Version History")
     version_history_action.triggered.connect(launch_version_history)
 
     # Create text widget for menu
-    action = QtWidgets.QAction("SKD — Publish Textures")
+    action = QtWidgets.QAction("LoS — Publish Textures")
     action.triggered.connect(launch_exporter)
 
     # Add widget to the File menu
