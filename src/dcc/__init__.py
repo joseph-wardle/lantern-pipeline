@@ -27,7 +27,6 @@ _DCC_PACKAGES = frozenset(
         "blender",
         "houdini",
         "maya",
-        "nuke",
         "substance_designer",
         "substance_painter",
     }

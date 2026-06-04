@@ -8,9 +8,6 @@
 [submodule "pipeline/lib/VFX-LYNX"]
 	path = src/dcc/houdini/third_party/VFX-LYNX
 	url = https://github.com/LucaScheller/VFX-LYNX.git
-[submodule "pipeline/software/nuke/tools/NukeSurvivalToolkit_publicRelease"]
-	path = src/dcc/nuke/third_party/NukeSurvivalToolkit_publicRelease
-	url = https://github.com/CreativeLyons/NukeSurvivalToolkit_publicRelease.git
 [submodule "pipeline/software/maya/scripts/studiolibrary"]
 	path = src/dcc/maya/third_party/studiolibrary
 	url = https://github.com/krathjen/studiolibrary.git

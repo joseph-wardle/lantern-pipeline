@@ -3,7 +3,7 @@
 `core` holds everything that is not tied to a specific DCC: domain models
 (asset, shot, environment, versioning, ShotGrid), shared UI helpers (ui),
 process telemetry, file/path utilities, and the like. Nothing under `core`
-imports `maya`, `hou`, `nuke`, `substance_painter`, `pxr`, or any other
+imports `maya`, `hou`, `substance_painter`, `pxr`, or any other
 DCC-specific module — the whole subtree must import cleanly from the outer
 venv.
 

@@ -41,7 +41,7 @@ class EventDefinition:
 EVENT_DEFINITIONS: Final[tuple[EventDefinition, ...]] = (
     EventDefinition(
         event_type=EVENT_DCC_LAUNCH,
-        description="DCC (Maya, Houdini, Nuke, Substance Painter) launch attempt.",
+        description="DCC (Maya, Houdini, Substance Painter) launch attempt.",
         required_payload_fields=("command_basename",),
     ),
     EventDefinition(

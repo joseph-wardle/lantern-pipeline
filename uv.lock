@@ -270,7 +270,6 @@ dev = [
     { name = "types-houdini" },
     { name = "types-katana" },
     { name = "types-mari" },
-    { name = "types-nuke" },
     { name = "types-opencolorio" },
     { name = "types-pyside2" },
     { name = "types-substance-painter" },
@@ -301,7 +300,6 @@ dev = [
     { name = "types-houdini", specifier = ">=19.5.1,<20" },
     { name = "types-katana", specifier = ">=5.0.5.0,<6" },
     { name = "types-mari", specifier = ">=5.0.5.0,<6" },
-    { name = "types-nuke", specifier = ">=13.2.8.0,<14" },
     { name = "types-opencolorio", specifier = ">=2.2.1.2,<3" },
     { name = "types-pyside2", specifier = ">=5.15.2.1.7,<6" },
     { name = "types-substance-painter", specifier = ">=2023.8.3.0.0,<2024" },
@@ -384,15 +382,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/39/66/2c285c3713564c129b0b18cb47c142a237f882eb8bf373d65e5cc8dea306/types_mari-5.0.5.0.tar.gz", hash = "sha256:159d828175b840ac3e193a027e08775dff7e59da7578882f31cef28101a6cea3", size = 55825, upload-time = "2023-08-04T21:50:30.647Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/04/34/761a73023181e4ac3c638f377634d855f1fa43ab835e56ff195ea0612676/types_mari-5.0.5.0-py2.py3-none-any.whl", hash = "sha256:06e130d943ec1c5ea25db625d304136dba65af3aeda6ecc9c9e19b97f4fb3f22", size = 93111, upload-time = "2023-08-04T21:50:28.693Z" },
-]
-
-[[package]]
-name = "types-nuke"
-version = "13.2.8.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/27/48/580f792f90ccd2124035d4bf9c3105cab64af509940693f17de9cfef2350/types_nuke-13.2.8.0.tar.gz", hash = "sha256:27626454c7d0bef1d3f4580f1e88c818cf9330186af538bd1ee5f48cc4c2cf67", size = 16447, upload-time = "2023-06-30T00:38:31.199Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/5a/c4/a7fffabbfab1113d74b295f6cf55c80715f1e18755d2dc4a43e6b51d8b02/types_nuke-13.2.8.0-py2.py3-none-any.whl", hash = "sha256:ea3aecb23c154204ff4f061077f13032ba9c67b09c019f1bf7df517633b56360", size = 20397, upload-time = "2023-06-30T00:38:29.523Z" },
 ]
 
 [[package]]

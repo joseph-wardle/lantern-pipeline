@@ -31,7 +31,6 @@ dev = [
     "types-houdini>=19.5.1,<20",
     "types-katana>=5.0.5.0,<6",
     "types-mari>=5.0.5.0,<6",
-    "types-nuke>=13.2.8.0,<14",
     "types-opencolorio>=2.2.1.2,<3",
     "types-pyside2>=5.15.2.1.7,<6",
     "types-substance-painter>=2023.8.3.0.0,<2024",
@@ -48,7 +47,6 @@ dev = [
 exclude = [
     ".git",
     "MOPS",
-    "NukeSurvivalToolkit_publicRelease",
     "VFX-LYNX",
     "ae_SVG",
     "dwpicker",
@@ -89,7 +87,6 @@ replace-imports-with-any = [
 [tool.ty.environment]
 extra-paths = [
     "src/dcc/maya/third_party/",
-    "src/dcc/nuke/site/LoS_Tools/scripts",
     "src/",
 ]
 
@@ -99,7 +96,6 @@ respect-ignore-files = false
 exclude = [
     ".git",
     "src/dcc/houdini/third_party/MOPS/**",
-    "src/dcc/nuke/third_party/NukeSurvivalToolkit_publicRelease",
     "src/dcc/houdini/third_party/VFX-LYNX/**",
     "src/dcc/houdini/third_party/ae_SVG/**",
     "src/**/mayacapture/**",

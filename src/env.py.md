@@ -22,9 +22,6 @@ class Executables:
     maya: Path                # absolute path to the Maya executable
     mayapy: Path              # absolute path to the mayapy executable
     blender: Path             # absolute path to the Blender executable
-    nukedir: Path             # absolute path to the Nuke installation dir (ie /opt/Nuke14.0v5)
-    nuke: Path                # absolute path to the Nuke executable
-    nuke_python: Path         # absolute path to the Nuke python executable
     oiiotool: Path            # absolute path to the oiiotool executable (such as the one bundled with Houdini)
     substance_designer: Path  # absolute path to the Substance Designer executable
     substance_painter: Path   # absolute path to the Substance Painter executable
