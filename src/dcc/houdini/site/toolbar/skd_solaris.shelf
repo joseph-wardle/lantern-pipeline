@@ -11,12 +11,6 @@
     <memberTool name="asset_version_history"/>
   </toolshelf>
 
-  <toolshelf name="skd_sets" label="SKD Sets">
-    <memberTool name="open_set"/>
-    <memberTool name="save_set_version"/>
-    <memberTool name="set_version_history"/>
-  </toolshelf>
-
   <toolshelf name="test_geometry" label="Test Geometry">
     <memberTool name="lop_testgeometry_crag"/>
     <memberTool name="lop_testgeometry_pighead"/>
@@ -43,24 +37,6 @@ fm.save_version()]]></script>
   <tool name="asset_version_history" label="Version History" icon="BUTTONS_history">
     <script scriptType="python"><![CDATA[from dcc.houdini.hipfile import HAssetFileManager
 fm = HAssetFileManager()
-fm.open_version_browser()]]></script>
-  </tool>
-
-  <tool name="open_set" label="Open Set" icon="LOP_layout">
-    <script scriptType="python"><![CDATA[from dcc.houdini.hipfile import HEnvFileManager
-fm = HEnvFileManager()
-fm.open_file()]]></script>
-  </tool>
-
-  <tool name="save_set_version" label="Save Set Version" icon="BUTTONS_save">
-    <script scriptType="python"><![CDATA[from dcc.houdini.hipfile import HEnvFileManager
-fm = HEnvFileManager()
-fm.save_version()]]></script>
-  </tool>
-
-  <tool name="set_version_history" label="Set Version History" icon="BUTTONS_history">
-    <script scriptType="python"><![CDATA[from dcc.houdini.hipfile import HEnvFileManager
-fm = HEnvFileManager()
 fm.open_version_browser()]]></script>
   </tool>
 
@@ -194,13 +170,11 @@ loptoolutils.referenceTestAsset(node, asset_name)]]></script>
 
   <shelfSet name="skd_solaris0" label="Solaris Geometry">
     <memberToolshelf name="skd_assets"/>
-    <memberToolshelf name="skd_sets"/>
     <memberToolshelf name="test_geometry"/>
   </shelfSet>
 
   <shelfSet name="skd_solaris" label="Solaris Geometry">
     <memberToolshelf name="skd_assets"/>
-    <memberToolshelf name="skd_sets"/>
     <memberToolshelf name="test_geometry"/>
     <memberToolshelf name="testing"/>
     <memberToolshelf name="shelf_2"/>
