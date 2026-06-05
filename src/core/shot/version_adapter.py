@@ -13,7 +13,6 @@ from core.util.paths import get_production_path
 
 from core.shotgrid import Shot
 from core.versioning import (
-    DCC_HOUDINI,
     DCC_MAYA,
     VERSION_MANIFEST_FILENAME,
     VersionOwner,
@@ -128,27 +127,7 @@ def maya_rlo_stream(
     )
 
 
-def houdini_department_stream(
-    shot: Shot,
-    department: str,
-    *,
-    owner: VersionOwner | None = None,
-) -> VersionStreamSpec:
-    resolved_department = normalize_text(department) or "unknown"
-    return shot_stream(
-        shot,
-        DCC_HOUDINI,
-        stream_name=resolved_department,
-        subpath=resolved_department,
-        stem=resolved_department,
-        ext="hipnc",
-        owner=owner,
-        label=f"{resolved_department.upper()} Scene",
-    )
-
-
 __all__ = [
-    "houdini_department_stream",
     "maya_anim_stream",
     "maya_rlo_stream",
     "shot_owner_for",
