@@ -5,7 +5,7 @@ import os
 import re
 import subprocess
 import time
-from math import ceil, floor, log2, sqrt
+from math import ceil, floor, sqrt
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
@@ -23,7 +23,6 @@ from dcc.substance_painter.util.progress import (
     PublishStage,
 )
 from core.util import silent_startupinfo
-from core.util.paths import get_repo_root
 
 log = logging.getLogger(__name__)
 
@@ -54,45 +53,41 @@ class TexConversionError(ChildProcessError):
 
 
 class TexConverter:
-    tex_path: Path
     preview_path: Path
     imgs_by_tex_set: list[list[str]]
     asset_name: str | None
     geo_variant: str | None
     material_variant: str | None
-    renderman_variant: str | None
+    material_layer: str | None
     batch_size: int
 
     def __init__(
         self,
-        tex_path: Path,
         preview_path: Path,
         imgs_by_tex_set: typing.Iterable[list[str]],
         *,
         asset_name: str | None = None,
         geo_variant: str | None = None,
         material_variant: str | None = None,
-        renderman_variant: str | None = None,
+        material_layer: str | None = None,
         batch_size: int = 18,
         progress_callback: PublishProgressCallback | None = None,
     ) -> None:
-        self.tex_path = tex_path
         self.preview_path = preview_path
         self.imgs_by_tex_set = [list(imgs) for imgs in imgs_by_tex_set]
         self.asset_name = asset_name
         self.geo_variant = geo_variant
         self.material_variant = material_variant
-        self.renderman_variant = renderman_variant
+        self.material_layer = material_layer
         self.batch_size = max(1, int(batch_size))
         self.progress_callback = progress_callback
 
     def _source_count(self) -> int:
         return sum(len(imgs) for imgs in self.imgs_by_tex_set)
 
-    def convert_all(self) -> tuple[list[Path], list[Path]]:
+    def convert_all(self) -> list[Path]:
         payload: dict[str, object] = {
             "source_count": self._source_count(),
-            "converted_tex_count": 0,
             "converted_preview_count": 0,
             "batch_size": self.batch_size,
         }
@@ -100,14 +95,11 @@ class TexConverter:
             payload["geo_variant"] = str(self.geo_variant)
         if self.material_variant:
             payload["material_variant"] = str(self.material_variant)
-        if self.renderman_variant:
-            payload["renderman_variant"] = str(self.renderman_variant)
+        if self.material_layer:
+            payload["material_layer"] = str(self.material_layer)
 
-        # Tracked across both conversion steps; finally folds whatever
-        # was reached into the event so a partial failure ("tex convert
-        # succeeded, preview surface failed") shows up in the dashboard
-        # rather than reporting zero.
-        converted_tex: list[Path] = []
+        # Folded into the event in `finally` so a failure still reports the
+        # partial count to the dashboard rather than reporting zero.
         converted_preview: list[Path] = []
 
         with telemetry.record(
@@ -116,134 +108,13 @@ class TexConverter:
             asset=self.asset_name,
         ) as telemetry_event:
             try:
-                converted_tex = self.convert_tex()
                 converted_preview = self.convert_previewsurface()
             finally:
                 telemetry_event.update(
-                    converted_tex_count=len(converted_tex),
                     converted_preview_count=len(converted_preview),
                 )
 
-        return converted_tex, converted_preview
-
-    def convert_tex(self) -> list[Path]:
-        """Convert all .png textures in the most recent export to .tex"""
-
-        assert self.tex_path is not None
-
-        # Remove any corrupted tex files from a previous export
-        for file in self.tex_path.iterdir():
-            if file.name.endswith(".temp.tex"):
-                file.unlink()
-
-        @self._debug_out
-        def tex_cmd(img: str, is_color: bool = False) -> list[str]:
-            # Use oiiotool for color maps. We intentionally avoid ACES conversions
-            # here; Substance exports should already be in sRGB for color maps.
-            # fmt: off
-            return [
-                str(Executables.oiiotool),
-                img,
-                *(
-                    [
-                        "-d", "uint8",
-                        "--dither",
-                    ] if is_color else []
-                ),
-                "--compression", "lzw" if is_color else "lossless",
-                "--planarconfig", "separate",
-                "-otex:fileformatname=tx:wrap=clamp:resize=1:prman_options=1",
-                f"{str(self.tex_path / Path(img).stem)}.tex",
-            ]
-            # fmt: on
-
-        @self._debug_out
-        def b2r_cmd(img: str) -> list[str]:
-            # fmt: off
-            return [
-                str(Executables.txmake),
-                "-resize", "round-",
-                "-mode", "periodic",
-                "-filter", "box",
-                "-mipfilter", "box",
-                "-bumprough", "2", "0", "0", "0", "0", "1",
-                "-newer",
-                img,
-                f"{str(self.tex_path / Path(img).stem)}.b2r",
-            ]
-            # fmt: on
-
-        @self._debug_out
-        def norm2height(img: str) -> list[str]:
-            """Convert normal map to height map
-            This is necessary because if we run b2r conversion directly on a
-            normal map, reversed UV tiles will have incorrect normals.
-            We can't run b2r conversion directly on the height map from
-            Substance because that doesn't include normal painting or
-            stickers. Thus, the remaining option is to convert the Normal map
-            from Substance back into a height map."""
-            img_dims = [str(int(log2(d))) for d in self._img_dims(img)]
-            # fmt: off
-            return [
-                str(Executables.sbsrender),
-                "render",
-                "--engine", "d3d11pc",
-                "--exr-format-compression", "zip",
-                "--output-bit-depth", "16f",
-                "--output-format", "exr",
-                "--input", str(get_repo_root() / "resources/sbs/normal2height.sbsar"),
-                "--set-entry", f"input@{img}",
-                "--set-value", f"$outputsize@{','.join(img_dims)}",
-                "--output-path", str(Path(img).parent),
-                "--output-name", img.replace(".pre-b2r", ""),
-            ]
-            # fmt: on
-
-        pre_cmdlines: list[list[str]] = []
-        cmdlines: list[list[str]] = []
-        for imgs in self.imgs_by_tex_set:
-            log.debug(imgs)
-            for img in imgs:
-                if img.endswith(".jpeg"):
-                    continue
-                log.debug(f"        {img}")
-                if "pre-b2r" in img:
-                    pre_cmdlines.append(norm2height(img))
-                    cmdlines.append(b2r_cmd(img.replace(".pre-b2r", "")))
-                else:
-                    cmdlines.append(tex_cmd(img, ("Color" in img or "Emissive" in img)))
-
-        self._wait_and_check_cmds(
-            pre_cmdlines, batch_size=self.batch_size, skip_check=True
-        )
-        total_tex = len(cmdlines)
-        if total_tex <= 0:
-            self._report_progress(
-                PublishStage.CONVERTING_TEX,
-                "No TEX conversions were required for this publish.",
-                current=1,
-                total=1,
-            )
-            return []
-
-        self._report_progress(
-            PublishStage.CONVERTING_TEX,
-            f"Converting source textures to TEX ({total_tex} file(s)).",
-            current=0,
-            total=total_tex,
-        )
-
-        finished_imgs = self._wait_and_check_cmds(
-            cmdlines,
-            batch_size=self.batch_size,
-            stage=PublishStage.CONVERTING_TEX,
-            message="Converting source textures to TEX.",
-        )
-
-        if len(finished_imgs) != len(cmdlines):
-            raise TexConversionError("Not all png textures were converted")
-
-        return finished_imgs
+        return converted_preview
 
     def convert_previewsurface(self) -> list[Path]:
         """Compile all .jpeg textures in the most recent export to UDIM-less tiles"""

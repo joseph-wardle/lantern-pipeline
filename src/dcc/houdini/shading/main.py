@@ -31,9 +31,8 @@ _BUILDER_OUTPUT_NODE_NAMES = (
 )
 _MATERIAL_BUILDER_Y_STEP = 3.5
 
-_RENDER_MAPS = ("BaseColor", "SpecularRoughness", "Normal", "Metallic")
 _PREVIEW_MAPS = ("DiffuseColor", "ORM", "Emissive", "NormalDX")
-_SUPPORTED_MAPS = tuple(sorted({*_RENDER_MAPS, *_PREVIEW_MAPS}))
+_SUPPORTED_MAPS = tuple(sorted(_PREVIEW_MAPS))
 _SORTED_SUPPORTED_MAPS = [
     str(name) for name in sorted(_SUPPORTED_MAPS, key=len, reverse=True)
 ]
@@ -77,20 +76,12 @@ class LayerDiscovery:
     name: str
     path: Path
     metadata_texture_sets: frozenset[str]
-    render_candidates: tuple[TextureCandidate, ...]
     preview_candidates: tuple[TextureCandidate, ...]
-
-
-@dataclass(frozen=True)
-class LayerMaterialSpec:
-    name: str
-    render_maps: dict[str, str]
 
 
 @dataclass(frozen=True)
 class MaterialSpec:
     texture_set: str
-    layers: tuple[LayerMaterialSpec, ...]
     preview_maps: dict[str, str]
 
 
@@ -134,18 +125,6 @@ class MatlibDiscovery:
     def _discover_layer(self, layer_dir: Path) -> LayerDiscovery:
         metadata_texture_sets = self._read_mat_info(layer_dir / "mat.json")
 
-        render_candidates: list[TextureCandidate] = []
-        render_candidates.extend(
-            self._parse_candidates(
-                layer_dir, priority=0, allowed_maps=set(_RENDER_MAPS)
-            )
-        )
-        render_candidates.extend(
-            self._parse_candidates(
-                layer_dir / "_src", priority=1, allowed_maps=set(_RENDER_MAPS)
-            )
-        )
-
         preview_candidates: list[TextureCandidate] = []
         preview_candidates.extend(
             self._parse_candidates(
@@ -162,7 +141,6 @@ class MatlibDiscovery:
             name=layer_dir.name,
             path=layer_dir,
             metadata_texture_sets=frozenset(metadata_texture_sets),
-            render_candidates=tuple(render_candidates),
             preview_candidates=tuple(preview_candidates),
         )
 
@@ -241,28 +219,19 @@ class MatlibSpecBuilder:
 
         materials: list[MaterialSpec] = []
         for tex_set in texture_sets:
-            layer_specs: list[LayerMaterialSpec] = []
-            for layer in ordered_layers:
-                layer_maps = self._render_maps_for_layer(layer, tex_set)
-                if layer_maps:
-                    layer_specs.append(
-                        LayerMaterialSpec(name=layer.name, render_maps=layer_maps)
-                    )
-
-            if not layer_specs:
+            preview_maps = self._preview_maps_for_tex_set(ordered_layers, tex_set)
+            if not preview_maps:
                 log.warning(
-                    "No render maps found for texture set %s (geo=%s mat=%s)",
+                    "No preview maps found for texture set %s (geo=%s mat=%s)",
                     tex_set,
                     geo_variant,
                     mat_variant,
                 )
                 continue
 
-            preview_maps = self._preview_maps_for_tex_set(ordered_layers, tex_set)
             materials.append(
                 MaterialSpec(
                     texture_set=tex_set,
-                    layers=tuple(layer_specs),
                     preview_maps=preview_maps,
                 )
             )
@@ -278,27 +247,9 @@ class MatlibSpecBuilder:
         for layer in layers:
             texture_sets.update(layer.metadata_texture_sets)
             texture_sets.update(
-                candidate.tex_set for candidate in layer.render_candidates
-            )
-            texture_sets.update(
                 candidate.tex_set for candidate in layer.preview_candidates
             )
         return texture_sets
-
-    def _render_maps_for_layer(
-        self, layer: LayerDiscovery, tex_set: str
-    ) -> dict[str, str]:
-        maps: dict[str, str] = {}
-        for map_name in _RENDER_MAPS:
-            candidates = [
-                candidate
-                for candidate in layer.render_candidates
-                if candidate.tex_set == tex_set and candidate.map_name == map_name
-            ]
-            chosen = self._select_candidate(candidates, map_name)
-            if chosen:
-                maps[map_name] = self._candidate_path(chosen)
-        return maps
 
     def _preview_maps_for_tex_set(
         self, layers: list[LayerDiscovery], tex_set: str
@@ -349,12 +300,7 @@ class MatlibSpecBuilder:
     @staticmethod
     def _extension_rank(map_name: str, extension: str) -> int:
         ext = extension.lower()
-        if map_name == "Normal":
-            order = ("b2r", "tex", "exr", "png", "jpg", "jpeg")
-        elif map_name in _PREVIEW_MAPS:
-            order = ("jpeg", "jpg", "png", "exr", "tex", "b2r")
-        else:
-            order = ("tex", "exr", "png", "jpg", "jpeg", "b2r")
+        order = ("jpeg", "jpg", "png", "exr")
         try:
             return order.index(ext)
         except ValueError:
@@ -367,7 +313,7 @@ class MatlibNodeBuilder:
     def __init__(self, matlib: hou.Node) -> None:
         self._matlib = matlib
 
-    def rebuild(self, spec: MaterialLibrarySpec, *, build_preview: bool) -> None:
+    def rebuild(self, spec: MaterialLibrarySpec) -> None:
         self._clear_generated_nodes()
         self._clear_generated_network_boxes()
         if not spec.materials:
@@ -381,26 +327,12 @@ class MatlibNodeBuilder:
         y_cursor = 0.0
         for material in spec.materials:
             builder = self._create_material_builder(material, y=-y_cursor)
-            rm_surface, rm_nodes = self._build_renderman_graph(
+            preview_surface, preview_nodes = self._build_preview_graph(
                 builder, material, row_y=0
             )
-            preview_row_y = -(len(material.layers) * 8 + 6)
-            preview_surface, preview_nodes = (
-                self._build_preview_graph(builder, material, preview_row_y)
-                if build_preview
-                else (None, [])
-            )
-            collect = self._build_material_collect(
-                builder,
-                row_y=0,
-                rm_surface=rm_surface,
-                preview_surface=preview_surface,
-            )
-            if not self._is_builder_output_collect(collect):
-                self._wire_material_builder_output(builder, collect)
-            self._build_navigation_groups(
-                builder, material, rm_nodes + [collect], preview_nodes
-            )
+            if preview_surface is not None:
+                self._wire_material_builder_output(builder, preview_surface)
+            self._build_navigation_groups(builder, material, preview_nodes)
             y_cursor += _MATERIAL_BUILDER_Y_STEP
 
     def _clear_generated_nodes(self) -> None:
@@ -427,130 +359,11 @@ class MatlibNodeBuilder:
     def _create_material_builder(self, material: MaterialSpec, *, y: float) -> hou.Node:
         tex_set_id = _sanitize_node_name(material.texture_set)
         mat_name = f"MAT_{tex_set_id}"
-        builder = self._create_first_supported_node(
-            self._matlib,
-            ("pxrmaterialbuilder::3.0", "pxrmaterialbuilder"),
-            mat_name,
-        )
-        if builder is None:
-            log.warning(
-                "pxrmaterialbuilder unavailable; falling back to subnet for %s",
-                mat_name,
-            )
-            builder = self._create_node(self._matlib, "subnet", mat_name)
-
+        builder = self._create_node(self._matlib, "subnet", mat_name)
         builder.setPosition(hou.Vector2(0, y))
         self._set_material_flag(builder, True)
         self._prune_material_builder(builder)
         return builder
-
-    def _build_renderman_graph(
-        self, parent: hou.Node, material: MaterialSpec, row_y: int
-    ) -> tuple[hou.Node, list[hou.Node]]:
-        tex_set_id = _sanitize_node_name(material.texture_set)
-        mixer = self._create_node(
-            parent, "pxrlayermixer::3.0", f"{tex_set_id}_LayerMixer"
-        )
-        surface = self._create_node(
-            parent, "pxrlayersurface::3.0", f"{tex_set_id}_PxrLayerSurface"
-        )
-        mixer.setPosition(hou.Vector2(8, row_y))
-        surface.setPosition(hou.Vector2(11, row_y))
-        surface.setInput(0, mixer, 0)
-
-        all_nodes: list[hou.Node] = [mixer, surface]
-        for layer_index, layer_spec in enumerate(material.layers):
-            layer_node, layer_nodes = self._build_layer(
-                parent, material.texture_set, layer_spec, row_y, layer_index
-            )
-            all_nodes.extend(layer_nodes)
-            if layer_index == 0:
-                mixer.setNamedInput("baselayer", layer_node, "pxrMaterialOut")
-                self._set_parm_if_exists(mixer, "layer1Enabled", False)
-            else:
-                input_name = f"layer{layer_index}"
-                mixer.setNamedInput(input_name, layer_node, "pxrMaterialOut")
-                self._set_parm_if_exists(mixer, f"{input_name}Enabled", True)
-        return surface, all_nodes
-
-    def _build_layer(
-        self,
-        parent: hou.Node,
-        tex_set_name: str,
-        layer_spec: LayerMaterialSpec,
-        row_y: int,
-        layer_index: int,
-    ) -> tuple[hou.Node, list[hou.Node]]:
-        tex_set_id = _sanitize_node_name(tex_set_name)
-        layer_id = _sanitize_node_name(layer_spec.name)
-        layer_suffix = f"{tex_set_id}_{layer_id}"
-        y = row_y - layer_index * 8
-
-        roughness = self._create_node(
-            parent, "pxrtexture::3.0", f"Roughness_{layer_suffix}"
-        )
-        roughness_remap = self._create_node(
-            parent, "pxrremap::3.0", f"RoughnessRemap_{layer_suffix}"
-        )
-        color = self._create_node(
-            parent, "pxrtexture::3.0", f"BaseColor_{layer_suffix}"
-        )
-        normal = self._create_node(
-            parent, "pxrnormalmap::3.0", f"Normal_{layer_suffix}"
-        )
-        layer = self._create_node(parent, "pxrlayer::3.0", f"Layer_{layer_suffix}")
-        metallic_workflow = self._create_node(
-            parent, "pxrmetallicworkflow::3.0", f"MetallicWorkflow_{layer_suffix}"
-        )
-        metallic = self._create_node(
-            parent, "pxrtexture::3.0", f"Metallic_{layer_suffix}"
-        )
-
-        roughness.setPosition(hou.Vector2(-8, y - 2))
-        roughness_remap.setPosition(hou.Vector2(-5, y - 2))
-        color.setPosition(hou.Vector2(-5, y + 3))
-        metallic.setPosition(hou.Vector2(-5, y + 0.5))
-        metallic_workflow.setPosition(hou.Vector2(-2, y + 1))
-        normal.setPosition(hou.Vector2(-2, y - 3.5))
-        layer.setPosition(hou.Vector2(1, y))
-        self._set_parm_if_exists(color, "linearize", True)
-        roughness_remap.setNamedInput("inputRGB", roughness, "resultRGB")
-        metallic_workflow.setNamedInput("baseColor", color, "resultRGB")
-        metallic_workflow.setNamedInput("metallic", metallic, "resultR")
-        layer.setNamedInput("diffuseColor", metallic_workflow, "resultDiffuseRGB")
-        layer.setNamedInput(
-            "specularFaceColor", metallic_workflow, "resultSpecularFaceRGB"
-        )
-        layer.setNamedInput(
-            "specularEdgeColor", metallic_workflow, "resultSpecularEdgeRGB"
-        )
-        layer.setNamedInput("specularRoughness", roughness_remap, "resultR")
-        layer.setNamedInput("bumpNormal", normal, "resultN")
-
-        self._set_texture_filename(
-            color, layer_spec.render_maps.get("BaseColor"), is_color=True
-        )
-        self._set_texture_filename(
-            roughness, layer_spec.render_maps.get("SpecularRoughness"), is_color=False
-        )
-        self._set_texture_filename(
-            normal, layer_spec.render_maps.get("Normal"), is_color=False
-        )
-        self._set_texture_filename(
-            metallic, layer_spec.render_maps.get("Metallic"), is_color=False
-        )
-
-        self._set_parm_if_exists(layer, "enableSpecular", True)
-        self._set_parm_if_exists(layer, "specularGain", 1.0)
-        return layer, [
-            roughness,
-            roughness_remap,
-            color,
-            normal,
-            layer,
-            metallic_workflow,
-            metallic,
-        ]
 
     def _build_preview_graph(
         self, parent: hou.Node, material: MaterialSpec, row_y: int
@@ -655,79 +468,30 @@ class MatlibNodeBuilder:
         )
         return preview_surface, preview_nodes
 
-    def _build_material_collect(
-        self,
-        parent: hou.Node,
-        row_y: int,
-        rm_surface: hou.Node,
-        preview_surface: hou.Node | None,
-    ) -> hou.Node:
-        existing_collect = self._find_builder_output_collect(parent)
-        if existing_collect is not None:
-            existing_collect.setPosition(hou.Vector2(14, row_y))
-            self._disconnect_inputs(existing_collect)
-            existing_collect.setInput(0, rm_surface, 0)
-            if preview_surface is not None:
-                existing_collect.setInput(1, preview_surface, 0)
-            return existing_collect
-
-        collect = self._create_first_supported_node(
-            parent, ("collect",), "FinalCollect"
-        )
-        if collect is None:
-            # Fallback: if collect is unavailable, expose RenderMan surface directly.
-            self._set_material_flag(rm_surface, True)
-            return rm_surface
-
-        collect.setPosition(hou.Vector2(14, row_y))
-        collect.setInput(0, rm_surface, 0)
-        if preview_surface is not None:
-            collect.setInput(1, preview_surface, 0)
-
-        return collect
-
-    def _find_builder_output_collect(self, builder: hou.Node) -> hou.Node | None:
-        for node_name in ("output_collect", "output_collect1"):
-            node = builder.node(node_name)
-            if node is not None:
-                return node
-        return None
-
-    def _is_builder_output_collect(self, node: hou.Node) -> bool:
-        return node.name() in {"output_collect", "output_collect1"}
-
     def _build_navigation_groups(
         self,
         parent: hou.Node,
         material: MaterialSpec,
-        rm_nodes: list[hou.Node],
         preview_nodes: list[hou.Node],
     ) -> None:
+        if not preview_nodes:
+            return
+
         tex_set_id = _sanitize_node_name(material.texture_set)
-
-        rm_box = self._create_network_box(parent, f"{tex_set_id}_PxrSurface_Group")
-        if rm_box is not None:
-            rm_box.setColor(hou.Color((0.22, 0.40, 0.78)))
-            self._set_network_box_label(rm_box, "RenderMan Shader")
-            for node in rm_nodes:
-                rm_box.addItem(node)
-            self._fit_network_box(rm_box)
-
-        if preview_nodes:
-            preview_box = self._create_network_box(
-                parent, f"{tex_set_id}_UsdPreviewSurface_Group"
-            )
-            if preview_box is not None:
-                preview_box.setColor(hou.Color((0.86, 0.78, 0.28)))
-                self._set_network_box_label(preview_box, "USD Preview Shader")
-                for node in preview_nodes:
-                    preview_box.addItem(node)
-                self._fit_network_box(preview_box)
+        preview_box = self._create_network_box(
+            parent, f"{tex_set_id}_UsdPreviewSurface_Group"
+        )
+        if preview_box is not None:
+            preview_box.setColor(hou.Color((0.86, 0.78, 0.28)))
+            self._set_network_box_label(preview_box, "USD Preview Shader")
+            for node in preview_nodes:
+                preview_box.addItem(node)
+            self._fit_network_box(preview_box)
 
     def _wire_material_builder_output(
         self, builder: hou.Node, source_material: hou.Node
     ) -> None:
-        # Typical pxrmaterialbuilder includes one or more output nodes.
+        # The material subnet exposes its surface through one or more output nodes.
         wired = False
         for output in self._builder_outputs(builder):
             if output.path() == source_material.path():
@@ -792,14 +556,6 @@ class MatlibNodeBuilder:
             except Exception:
                 continue
 
-    @staticmethod
-    def _disconnect_inputs(node: hou.Node) -> None:
-        for connection in node.inputConnections():
-            try:
-                node.setInput(connection.inputIndex(), None)
-            except (hou.OperationFailed, hou.InvalidInput):
-                continue
-
     def _create_primvar_reader(
         self,
         parent: hou.Node,
@@ -855,16 +611,6 @@ class MatlibNodeBuilder:
         self._set_parm_if_exists(node, "sourceColorSpace", "sRGB" if color else "raw")
         self._set_parm_if_exists(node, "sourcecolorspace", "sRGB" if color else "raw")
         return node
-
-    def _set_texture_filename(
-        self, node: hou.Node, path: str | None, *, is_color: bool
-    ) -> None:
-        if not path:
-            return
-        self._set_parm_if_exists(node, "filename", path)
-        if is_color:
-            # OCIO alias from sandwich-v01 config (resolves to "sRGB - Texture")
-            self._set_parm_if_exists(node, "filename_colorspace", "srgb_texture")
 
     @staticmethod
     def _set_parm_if_exists(node: hou.Node, parm_name: str, value) -> None:
@@ -1069,12 +815,6 @@ class MatlibManager:
             if parm is not None:
                 parm.set(value)
 
-    def _build_preview_toggle(self, node: hou.LopNode) -> bool:
-        parm = node.parm("build_usd_preview")
-        if parm is None:
-            return True
-        return bool(parm.evalAsInt())
-
     def _auto_rebuild_enabled(self, node: hou.LopNode) -> bool:
         parm = node.parm("auto_rebuild")
         if parm is None:
@@ -1131,7 +871,7 @@ class MatlibManager:
         )
 
         builder = MatlibNodeBuilder(matlib)
-        builder.rebuild(spec, build_preview=self._build_preview_toggle(curr_node))
+        builder.rebuild(spec)
 
     def create_matnet(
         self,

@@ -41,7 +41,7 @@ def on_created(node: hou.Node) -> None:
         "localize": 0,
         "lopoutput": _DEFAULT_LOPOUTPUT,
         "thumbnailmode": 2,
-        "renderer": "RenderMan RIS",
+        "renderer": "BRAY_HdKarma",
         "thumbnailscenesource": 1,
         "thumbnailinputcamera": "/lookdev/cam",
     }

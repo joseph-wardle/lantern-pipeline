@@ -58,7 +58,6 @@ class Exporter:
     _out_path: Path
     _preview_path: Path
     _src_path: Path
-    _tex_path: Path
 
     def __init__(self, asset: Asset) -> None:
         self._asset = asset
@@ -81,7 +80,6 @@ class Exporter:
         self._preview_path = resolve_mapped_path(
             paths.publish_textures_preview_dir(geo_var, mat_var, material_layer)
         )
-        self._tex_path = self._out_path
 
         self._out_path.mkdir(parents=True, exist_ok=True)
         self._src_path.mkdir(parents=True, exist_ok=True)
@@ -101,14 +99,14 @@ class Exporter:
         *,
         geo_variant: str,
         material_variant: str,
-        renderman_variant: str,
+        material_layer: str,
         texture_set_count: int,
         udim_set_count: int,
     ) -> dict[str, object]:
         return {
             "geo_variant": str(geo_variant or "main"),
             "material_variant": str(material_variant or "main"),
-            "renderman_variant": str(renderman_variant or "main"),
+            "material_layer": str(material_layer or "main"),
             "texture_set_count": max(0, int(texture_set_count)),
             "udim_set_count": max(0, int(udim_set_count)),
         }
@@ -337,13 +335,12 @@ class Exporter:
         )
 
         tex_converter = TexConverter(
-            self._tex_path,
             self._preview_path,
             list(all_exported_textures.values()),
             asset_name=self._texture_export_asset_name(),
             geo_variant=geo_var,
             material_variant=mat_var,
-            renderman_variant=material_layer,
+            material_layer=material_layer,
             progress_callback=progress_callback,
         )
 
@@ -352,12 +349,12 @@ class Exporter:
         except TexConversionError:
             log.exception("Texture conversion failed.")
             sp.logging.warning(
-                "TEX conversion failed; source textures exported but .tex files were not generated."
+                "Preview-texture conversion failed; source textures exported "
+                "but preview tiles were not generated."
             )
             self._set_error_message(
-                "Source textures exported, but TEX conversion failed.\n"
-                "Stop rendering this asset in Houdini and press "
-                '"Reset RenderMan RIS/XPU", then try again.'
+                "Source textures exported, but preview-texture conversion failed.\n"
+                "Make sure no other program is using these files, then try again."
             )
             return False
 
@@ -380,7 +377,7 @@ class Exporter:
         initial_payload = self._texture_export_payload(
             geo_variant=geo_var,
             material_variant=mat_var,
-            renderman_variant=material_layer,
+            material_layer=material_layer,
             texture_set_count=len(exp_setting_arr),
             udim_set_count=count_udim_sets(exp_setting_arr),
         )

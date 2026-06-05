@@ -629,7 +629,7 @@ def _configure_component_output_defaults(out: hou.Node) -> None:
     _set_parm_if_exists(out, "localize", False)
     _set_parm_if_exists(out, "lopoutput", '$HIP/publish/`chs("filename")`')
     _set_parm_if_exists(out, "thumbnailmode", 2)
-    _set_parm_if_exists(out, "renderer", "RenderMan RIS")
+    _set_parm_if_exists(out, "renderer", "BRAY_HdKarma")
     _set_parm_if_exists(out, "thumbnailscenesource", 1)
     _set_parm_if_exists(out, "thumbnailinputcamera", "/lookdev/cam")
 

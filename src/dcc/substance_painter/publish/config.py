@@ -14,7 +14,7 @@ from dcc.substance_painter.publish.types import (
     TexSetExportSettings,
 )
 from dcc.substance_painter.util.texture_set import texture_set_name
-from core.struct.material import DisplacementSource, NormalSource, NormalType
+from core.struct.material import DisplacementSource, NormalSource
 
 
 def channel_export_name(channel: sp.textureset.Channel) -> str:
@@ -234,10 +234,7 @@ def _shader_maps(export_settings: TexSetExportSettings) -> list[dict[str, object
             },
         },
         {
-            "fileName": (
-                "$textureSet_Normal(_$colorSpace)(.$udim)"
-                f"{'.pre-b2r' if export_settings.normal_type == NormalType.BUMP_ROUGHNESS else ''}"
-            ),
+            "fileName": "$textureSet_Normal(_$colorSpace)(.$udim)",
             "channels": [
                 {
                     "destChannel": ch,
@@ -257,17 +254,8 @@ def _shader_maps(export_settings: TexSetExportSettings) -> list[dict[str, object
                 for ch in "RGB"
             ],
             "parameters": {
-                **(
-                    {
-                        "bitDepth": "16f",
-                        "fileFormat": "exr",
-                    }
-                    if export_settings.normal_type is NormalType.BUMP_ROUGHNESS
-                    else {
-                        "bitDepth": "16",
-                        "fileFormat": "png",
-                    }
-                ),
+                "bitDepth": "16",
+                "fileFormat": "png",
                 "sizeLog2": export_settings.resolution,
             },
         },

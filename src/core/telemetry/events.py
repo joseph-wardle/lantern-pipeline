@@ -67,8 +67,8 @@ EVENT_DEFINITIONS: Final[tuple[EventDefinition, ...]] = (
     ),
     EventDefinition(
         event_type=EVENT_TEXTURE_CONVERT_TEX,
-        description="Texture conversion (tex / txmake) terminal event.",
-        required_payload_fields=("source_count", "converted_tex_count"),
+        description="Texture conversion (preview surface) terminal event.",
+        required_payload_fields=("source_count",),
         has_duration=True,
     ),
     EventDefinition(
