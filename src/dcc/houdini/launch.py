@@ -99,7 +99,7 @@ class HoudiniLauncher(Launcher):
             "OCIO": str(repo_root / "resources/ocio/sandwich-v01/config.ocio"),
             "PIPE_LOG_LEVEL": log.getEffectiveLevel(),
             "PIPE_TELEMETRY_SPOOL_DIR": str(get_shared_telemetry_spool_dir()),
-            # Root for vendored Houdini packages (MOPS, LYNX, axiom, ae_SVG)
+            # Root for vendored Houdini packages (axiom)
             "DCC_HOUDINI_THIRD_PARTY": str(third_party),
             "PXR_AR_DEFAULT_SEARCH_PATH": os.pathsep.join(
                 [

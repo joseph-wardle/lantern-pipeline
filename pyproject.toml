@@ -40,9 +40,6 @@ dev = [
 [tool.ruff]
 exclude = [
     ".git",
-    "MOPS",
-    "VFX-LYNX",
-    "ae_SVG",
     "dwpicker",
     "dwpicker_git",
     "mayacapture",
@@ -88,9 +85,6 @@ include = ["src"]
 respect-ignore-files = false
 exclude = [
     ".git",
-    "src/dcc/houdini/third_party/MOPS/**",
-    "src/dcc/houdini/third_party/VFX-LYNX/**",
-    "src/dcc/houdini/third_party/ae_SVG/**",
     "src/**/mayacapture/**",
     "src/**/maya-timeline-marker_git/**",
     "src/dcc/maya/third_party/y-rig/**",
