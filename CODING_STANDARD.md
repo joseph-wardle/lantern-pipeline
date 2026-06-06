@@ -57,7 +57,7 @@ Avoid helpers that look harmless but secretly mutate the scene or write to disk
 
 ### Consult official documentation first
 
-Before changing Maya, Houdini, Nuke, Substance Painter, USD, Qt, ShotGrid, or similar integrations:
+Before changing Maya, Houdini, Substance Painter, USD, Qt, ShotGrid, or similar integrations:
 
 * read the official docs
 * verify exact API names and side effects

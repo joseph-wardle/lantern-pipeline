@@ -20,7 +20,6 @@ class NormalSource(IntEnum):
 
 class NormalType(IntEnum):
     STANDARD = 0
-    BUMP_ROUGHNESS = 1
 
 
 @attrs.define

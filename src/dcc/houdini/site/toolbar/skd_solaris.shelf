@@ -9,21 +9,6 @@
     <memberTool name="open_asset"/>
     <memberTool name="save_asset_version"/>
     <memberTool name="asset_version_history"/>
-    <memberTool name="skd_playblast"/>
-  </toolshelf>
-
-  <toolshelf name="skd_sets" label="SKD Sets">
-    <memberTool name="open_set"/>
-    <memberTool name="save_set_version"/>
-    <memberTool name="set_version_history"/>
-    <memberTool name="skd_playblast"/>
-  </toolshelf>
-
-  <toolshelf name="skd_shots" label="SKD Shots">
-    <memberTool name="open_shot"/>
-    <memberTool name="save_shot_version"/>
-    <memberTool name="shot_version_history"/>
-    <memberTool name="skd_playblast"/>
   </toolshelf>
 
   <toolshelf name="test_geometry" label="Test Geometry">
@@ -53,46 +38,6 @@ fm.save_version()]]></script>
     <script scriptType="python"><![CDATA[from dcc.houdini.hipfile import HAssetFileManager
 fm = HAssetFileManager()
 fm.open_version_browser()]]></script>
-  </tool>
-
-  <tool name="open_set" label="Open Set" icon="LOP_layout">
-    <script scriptType="python"><![CDATA[from dcc.houdini.hipfile import HEnvFileManager
-fm = HEnvFileManager()
-fm.open_file()]]></script>
-  </tool>
-
-  <tool name="save_set_version" label="Save Set Version" icon="BUTTONS_save">
-    <script scriptType="python"><![CDATA[from dcc.houdini.hipfile import HEnvFileManager
-fm = HEnvFileManager()
-fm.save_version()]]></script>
-  </tool>
-
-  <tool name="set_version_history" label="Set Version History" icon="BUTTONS_history">
-    <script scriptType="python"><![CDATA[from dcc.houdini.hipfile import HEnvFileManager
-fm = HEnvFileManager()
-fm.open_version_browser()]]></script>
-  </tool>
-
-  <tool name="open_shot" label="Open Shot" icon="NETWORKS_scene">
-    <script scriptType="python"><![CDATA[from dcc.houdini.hipfile import HShotFileManager
-HShotFileManager().open_file()]]></script>
-  </tool>
-
-  <tool name="save_shot_version" label="Save Shot Version" icon="BUTTONS_save">
-    <script scriptType="python"><![CDATA[from dcc.houdini.hipfile import HShotFileManager
-fm = HShotFileManager(prompt_for_department=False)
-fm.save_version()]]></script>
-  </tool>
-
-  <tool name="shot_version_history" label="Shot Version History" icon="BUTTONS_history">
-    <script scriptType="python"><![CDATA[from dcc.houdini.hipfile import HShotFileManager
-fm = HShotFileManager(prompt_for_department=False)
-fm.open_version_browser()]]></script>
-  </tool>
-
-  <tool name="skd_playblast" label="Playblast" icon="TOOLS_view">
-    <script scriptType="python"><![CDATA[from dcc.houdini.playblast import launch_playblast
-launch_playblast()]]></script>
   </tool>
 
   <tool name="reload_pipe_houdini" label="Reload Pipe" icon="BUTTONS_reload">
@@ -225,15 +170,11 @@ loptoolutils.referenceTestAsset(node, asset_name)]]></script>
 
   <shelfSet name="skd_solaris0" label="Solaris Geometry">
     <memberToolshelf name="skd_assets"/>
-    <memberToolshelf name="skd_sets"/>
-    <memberToolshelf name="skd_shots"/>
     <memberToolshelf name="test_geometry"/>
   </shelfSet>
 
   <shelfSet name="skd_solaris" label="Solaris Geometry">
-    <memberToolshelf name="skd_shots"/>
     <memberToolshelf name="skd_assets"/>
-    <memberToolshelf name="skd_sets"/>
     <memberToolshelf name="test_geometry"/>
     <memberToolshelf name="testing"/>
     <memberToolshelf name="shelf_2"/>
@@ -244,8 +185,6 @@ loptoolutils.referenceTestAsset(node, asset_name)]]></script>
     <memberToolshelf name="kinefx"/>
     <memberToolshelf name="simplefx"/>
     <memberToolshelf name="collisions"/>
-    <memberToolshelf name="RenderManRIS"/>
-    <memberToolshelf name="RenderMan26"/>
     <memberToolshelf name="testing"/>
   </shelfSet>
 

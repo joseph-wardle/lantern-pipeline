@@ -148,9 +148,9 @@ class SubstanceExportWindow(QMainWindow, ButtonPair):
         self._main_layout.addWidget(asset_label)
 
         lock_warning = QLabel(
-            "<b>Heads up:</b> If this asset is open in Houdini on Windows, "
-            "stop the render and press <b>Reset RenderMan RIS/XPU</b> before "
-            "exporting or TEX conversion can fail."
+            "<b>Heads up:</b> If this asset's textures are open in another "
+            "program (e.g. Houdini on Windows), close them before exporting "
+            "or texture conversion can fail."
         )
         lock_warning.setWordWrap(True)
         lock_warning.setStyleSheet("color: #d28d42;")
@@ -823,7 +823,6 @@ class TexSetWidget(QtWidgets.QWidget):
 
     _NORM_TYPE_STRS = {
         NormalType.STANDARD: "Standard (default)",
-        NormalType.BUMP_ROUGHNESS: "Bump Roughness",
     }
 
     _NORM_SOURCE_STRS = {
@@ -962,16 +961,6 @@ class TexSetWidget(QtWidgets.QWidget):
         self._normal_type_dropdown.addItems(nt_items)
         self._normal_type_dropdown.setCurrentText(self._get_default(nt_items))
         settings_layout.addWidget(self._normal_type_dropdown)
-        settings_layout.addWidget(
-            self._info_tooltip(
-                "Bump Roughness mapping preserves detail in shiny items with "
-                "variance/breakup in the roughness (i.e. scratches, smudges, "
-                "etc.). \n"
-                "Select Bump Roughness if your texture set is a shiny "
-                "material with variance/breakup in the roughness. Otherwise, "
-                "leave it on Standard."
-            )
-        )
 
         # Displacement map source
         settings_layout.addWidget(QLabel("Displacement Map Source:"), 5, 0)

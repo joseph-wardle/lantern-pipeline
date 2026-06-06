@@ -63,27 +63,54 @@ wheels = [
 ]
 
 [[package]]
-name = "gitdb"
-version = "4.0.12"
-source = { registry = "https://pypi.org/simple" }
+name = "lantern-pipeline"
+version = "0.1.0"
+source = { virtual = "." }
 dependencies = [
-    { name = "smmap" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/72/94/63b0fc47eb32792c7ba1fe1b694daec9a63620db1e313033d18140c2320a/gitdb-4.0.12.tar.gz", hash = "sha256:5ef71f855d191a3326fcfbc0d5da835f26b13fbcba60c32c21091c349ffdb571", size = 394684, upload-time = "2025-01-02T07:20:46.413Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a0/61/5c78b91c3143ed5c14207f463aecfc8f9dbb5092fb2869baf37c273b2705/gitdb-4.0.12-py3-none-any.whl", hash = "sha256:67073e15955400952c6565cc3e707c554a4eea2e428946f7a4c162fab9bd9bcf", size = 62794, upload-time = "2025-01-02T07:20:43.624Z" },
+    { name = "attrs" },
+    { name = "cattrs" },
+    { name = "ffmpeg-python" },
+    { name = "filelock" },
+    { name = "qt-py" },
+    { name = "shotgun-api3" },
 ]
 
-[[package]]
-name = "gitpython"
-version = "3.1.48"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "gitdb" },
+[package.dev-dependencies]
+dev = [
+    { name = "fake-bpy-module-5-0" },
+    { name = "maya-stubs" },
+    { name = "nptyping" },
+    { name = "psycopg", extra = ["binary"] },
+    { name = "ruff" },
+    { name = "ty" },
+    { name = "types-houdini" },
+    { name = "types-pyside2" },
+    { name = "types-substance-painter" },
+    { name = "types-usd" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a6/c3/e4a9656f3cdb280f5dc65a68cc6fc46e79f897d27c1a36bbb4f0f47aaac5/gitpython-3.1.48.tar.gz", hash = "sha256:b7c49ff4a49946fce38ac84116efa311b15e7dad06dc3787fc9e206bf9ef75e1", size = 217288, upload-time = "2026-04-28T05:35:45.328Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/94/50/bb9703c364c00e7be67ccda03536f3d684766ce109d184c9d1f072d866ca/gitpython-3.1.48-py3-none-any.whl", hash = "sha256:737698b05889cca0f9aba7054d796620df2092c68926ee1470e5c7f5ac886680", size = 209800, upload-time = "2026-04-28T05:35:42.543Z" },
+
+[package.metadata]
+requires-dist = [
+    { name = "attrs", specifier = ">=24.2.0,<25" },
+    { name = "cattrs", specifier = ">=23.2.3,<24" },
+    { name = "ffmpeg-python", specifier = ">=0.2.0,<0.3" },
+    { name = "filelock", specifier = ">=3.17.0,<4" },
+    { name = "qt-py", specifier = ">=1.4.1,<2" },
+    { name = "shotgun-api3", specifier = ">=3.8.4,<4" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "fake-bpy-module-5-0", specifier = ">=20260128" },
+    { name = "maya-stubs", specifier = ">=0.4.1,<0.5" },
+    { name = "nptyping", specifier = ">=2.5.0,<3" },
+    { name = "psycopg", extras = ["binary"], specifier = ">=3.2,<4" },
+    { name = "ruff", specifier = ">=0.5.7,<0.6" },
+    { name = "ty", specifier = ">=0.0.33" },
+    { name = "types-houdini", specifier = ">=19.5.1,<20" },
+    { name = "types-pyside2", specifier = ">=5.15.2.1.7,<6" },
+    { name = "types-substance-painter", specifier = ">=2023.8.3.0.0,<2024" },
+    { name = "types-usd", specifier = ">=24.5.1,<25" },
 ]
 
 [[package]]
@@ -130,12 +157,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/28/4a/46d9e65106879492374999e76eb85f87b15328e06bd1550668f79f7b18c6/numpy-1.26.4-cp312-cp312-win32.whl", hash = "sha256:50193e430acfc1346175fcbdaa28ffec49947a06918b7b92130744e81e640110", size = 5677803, upload-time = "2024-02-05T23:58:08.963Z" },
     { url = "https://files.pythonhosted.org/packages/16/2e/86f24451c2d530c88daf997cb8d6ac622c1d40d19f5a031ed68a4b73a374/numpy-1.26.4-cp312-cp312-win_amd64.whl", hash = "sha256:08beddf13648eb95f8d867350f6a018a4be2e5ad54c8d8caed89ebca558b2818", size = 15517754, upload-time = "2024-02-05T23:58:36.364Z" },
 ]
-
-[[package]]
-name = "nxt-core"
-version = "0.18.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/32/b8/d15fda032fbb33e88e0c8cf9e5504540fcad814b3afa034b7912d3e9f3cd/nxt-core-0.18.1.tar.gz", hash = "sha256:210c6f55b6593a91c5412d13196c0e7b5bbcaf6d7e16f42bd8c8766c93908498", size = 129446, upload-time = "2024-11-25T21:59:38.493Z" }
 
 [[package]]
 name = "psycopg"
@@ -244,95 +265,12 @@ wheels = [
 ]
 
 [[package]]
-name = "sandwich-pipeline"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "attrs" },
-    { name = "cattrs" },
-    { name = "ffmpeg-python" },
-    { name = "filelock" },
-    { name = "gitpython" },
-    { name = "nxt-core" },
-    { name = "qt-py" },
-    { name = "shotgun-api3" },
-    { name = "six" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "fake-bpy-module-5-0" },
-    { name = "maya-stubs" },
-    { name = "nptyping" },
-    { name = "psycopg", extra = ["binary"] },
-    { name = "ruff" },
-    { name = "ty" },
-    { name = "types-houdini" },
-    { name = "types-katana" },
-    { name = "types-mari" },
-    { name = "types-nuke" },
-    { name = "types-opencolorio" },
-    { name = "types-pyside2" },
-    { name = "types-substance-painter" },
-    { name = "types-usd" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "attrs", specifier = ">=24.2.0,<25" },
-    { name = "cattrs", specifier = ">=23.2.3,<24" },
-    { name = "ffmpeg-python", specifier = ">=0.2.0,<0.3" },
-    { name = "filelock", specifier = ">=3.17.0,<4" },
-    { name = "gitpython", specifier = ">=3.1.45,<4" },
-    { name = "nxt-core", specifier = ">=0.18.1" },
-    { name = "qt-py", specifier = ">=1.4.1,<2" },
-    { name = "shotgun-api3", specifier = ">=3.8.4,<4" },
-    { name = "six", specifier = ">=1.17.0,<2" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "fake-bpy-module-5-0", specifier = ">=20260128" },
-    { name = "maya-stubs", specifier = ">=0.4.1,<0.5" },
-    { name = "nptyping", specifier = ">=2.5.0,<3" },
-    { name = "psycopg", extras = ["binary"], specifier = ">=3.2,<4" },
-    { name = "ruff", specifier = ">=0.5.7,<0.6" },
-    { name = "ty", specifier = ">=0.0.33" },
-    { name = "types-houdini", specifier = ">=19.5.1,<20" },
-    { name = "types-katana", specifier = ">=5.0.5.0,<6" },
-    { name = "types-mari", specifier = ">=5.0.5.0,<6" },
-    { name = "types-nuke", specifier = ">=13.2.8.0,<14" },
-    { name = "types-opencolorio", specifier = ">=2.2.1.2,<3" },
-    { name = "types-pyside2", specifier = ">=5.15.2.1.7,<6" },
-    { name = "types-substance-painter", specifier = ">=2023.8.3.0.0,<2024" },
-    { name = "types-usd", specifier = ">=24.5.1,<25" },
-]
-
-[[package]]
 name = "shotgun-api3"
 version = "3.10.0"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/62/d3/f8eecd9f18a0ec127b77acb461c427f38afde1c149b203485465f37f6cb0/shotgun_api3-3.10.0.tar.gz", hash = "sha256:7adb508b7d4e67943fef49b0c2149a21dcf4da0532d4912179e40915d98644f6", size = 417844, upload-time = "2026-02-06T01:11:10.226Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3d/14/cd3d243b3344857e15290b70d0dc956f03ba9482a9c080f4de16d69ed260/shotgun_api3-3.10.0-py2.py3-none-any.whl", hash = "sha256:26f8c1fa3cda08aa6895ae1997079b1c010aeb3a68ec085b4bd0d4ea2c9ad982", size = 385793, upload-time = "2026-02-06T01:11:08.749Z" },
-]
-
-[[package]]
-name = "six"
-version = "1.17.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/94/e7/b2c673351809dca68a0e064b6af791aa332cf192da575fd474ed7d6f16a2/six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81", size = 34031, upload-time = "2024-12-04T17:35:28.174Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274", size = 11050, upload-time = "2024-12-04T17:35:26.475Z" },
-]
-
-[[package]]
-name = "smmap"
-version = "5.0.3"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/1f/ea/49c993d6dfdd7338c9b1000a0f36817ed7ec84577ae2e52f890d1a4ff909/smmap-5.0.3.tar.gz", hash = "sha256:4d9debb8b99007ae47165abc08670bd74cb74b5227dda7f643eccc4e9eb5642c", size = 22506, upload-time = "2026-03-09T03:43:26.1Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c1/d4/59e74daffcb57a07668852eeeb6035af9f32cbfd7a1d2511f17d2fe6a738/smmap-5.0.3-py3-none-any.whl", hash = "sha256:c106e05d5a61449cf6ba9a1e650227ecfb141590d2a98412103ff35d89fc7b2f", size = 24390, upload-time = "2026-03-09T03:43:24.361Z" },
 ]
 
 [[package]]
@@ -366,41 +304,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/ac/04/56332f097c5e5890087285fa9ce61f21a5c58cf17c2f97da4a34ee965f5e/types_houdini-19.5.1.tar.gz", hash = "sha256:60e51f1ea6d57c63792c027b87aa0b4052e05b215cd0fdd1ecc98de203198c17", size = 72231, upload-time = "2023-08-05T06:00:29.657Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/94/44/59e86a75ab3e4c067077087fdd54f02218c7b7a3df7b572bf1207b186538/types_houdini-19.5.1-py2.py3-none-any.whl", hash = "sha256:1b7aaf25690ef9f820507ce6a45656a1c65d1b25102978e4bd57e7a54fb1bf50", size = 72962, upload-time = "2023-08-05T06:00:26.929Z" },
-]
-
-[[package]]
-name = "types-katana"
-version = "5.0.5.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/47/0b/d95da1763e56df58adb1b44ae8020d7f5c9c49607d843d9fa91c5bd9e895/types_katana-5.0.5.0.tar.gz", hash = "sha256:bbeaec6ac8b95260097ff90fb3556937b88f533bffa11eb8e15a28fb67d2a7b3", size = 319641, upload-time = "2023-08-08T05:05:41.848Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/2c/44/64612aa68f26891354bafbdb55b11505de7b5fcfe57e8865d0b256be5df4/types_katana-5.0.5.0-py2.py3-none-any.whl", hash = "sha256:236a57633dfc4f3fd9e37a0c7fe75dc34124f3af20d552d0a2b1b2219cbd1140", size = 757127, upload-time = "2023-08-08T05:05:39.651Z" },
-]
-
-[[package]]
-name = "types-mari"
-version = "5.0.5.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/39/66/2c285c3713564c129b0b18cb47c142a237f882eb8bf373d65e5cc8dea306/types_mari-5.0.5.0.tar.gz", hash = "sha256:159d828175b840ac3e193a027e08775dff7e59da7578882f31cef28101a6cea3", size = 55825, upload-time = "2023-08-04T21:50:30.647Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/04/34/761a73023181e4ac3c638f377634d855f1fa43ab835e56ff195ea0612676/types_mari-5.0.5.0-py2.py3-none-any.whl", hash = "sha256:06e130d943ec1c5ea25db625d304136dba65af3aeda6ecc9c9e19b97f4fb3f22", size = 93111, upload-time = "2023-08-04T21:50:28.693Z" },
-]
-
-[[package]]
-name = "types-nuke"
-version = "13.2.8.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/27/48/580f792f90ccd2124035d4bf9c3105cab64af509940693f17de9cfef2350/types_nuke-13.2.8.0.tar.gz", hash = "sha256:27626454c7d0bef1d3f4580f1e88c818cf9330186af538bd1ee5f48cc4c2cf67", size = 16447, upload-time = "2023-06-30T00:38:31.199Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/5a/c4/a7fffabbfab1113d74b295f6cf55c80715f1e18755d2dc4a43e6b51d8b02/types_nuke-13.2.8.0-py2.py3-none-any.whl", hash = "sha256:ea3aecb23c154204ff4f061077f13032ba9c67b09c019f1bf7df517633b56360", size = 20397, upload-time = "2023-06-30T00:38:29.523Z" },
-]
-
-[[package]]
-name = "types-opencolorio"
-version = "2.4.2.0"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/1c/86/17f33598865b875b5780311426cf1ff56904659f7f56b4a65b5fc9f0f936/types_opencolorio-2.4.2.0-py2.py3-none-any.whl", hash = "sha256:c281760999a3ab4445590c89a11b53fa496afa85736051412fa1c20c8622a007", size = 16064, upload-time = "2025-07-22T02:57:28.699Z" },
 ]
 
 [[package]]

@@ -99,7 +99,7 @@ class HoudiniLauncher(Launcher):
             "OCIO": str(repo_root / "resources/ocio/sandwich-v01/config.ocio"),
             "PIPE_LOG_LEVEL": log.getEffectiveLevel(),
             "PIPE_TELEMETRY_SPOOL_DIR": str(get_shared_telemetry_spool_dir()),
-            # Root for vendored Houdini packages (MOPS, LYNX, axiom, tlops, ae_SVG)
+            # Root for vendored Houdini packages (axiom)
             "DCC_HOUDINI_THIRD_PARTY": str(third_party),
             "PXR_AR_DEFAULT_SEARCH_PATH": os.pathsep.join(
                 [
@@ -117,15 +117,10 @@ class HoudiniLauncher(Launcher):
             "PYTHONPATH": os.pathsep.join(
                 [
                     str(resolve_mapped_path(src_path)),
-                    # Add $RMANTREE/bin to PYTHONPATH for the Tractor PDG scheduler
-                    os.environ.get("RMANTREE", "") + "/bin",
                 ]
             ),
-            "RMAN_COLOR_CONFIG_DIR": str(repo_root / "resources/ocio/sandwich-v01"),
             # Force Qt5 bindings in Houdini to avoid Qt6/PySide6 conflicts
             "QT_PREFERRED_BINDING": "PySide2",
-            # Explicitly set Tractor location
-            "TRACTOR_ENGINE": "tractor-engine.cs.byu.edu:443",
         }
 
         launch_command = ""

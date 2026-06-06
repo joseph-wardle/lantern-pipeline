@@ -1,7 +1,7 @@
 """High-level orchestration for uploading a playblast Version to ShotGrid.
 
-Consolidates the three near-identical orchestrations that used to live in
-`pipe/houdini/playblast/launcher.py`, `pipe/maya/playblast/shot/dialog.py`, and
+Consolidates the near-identical orchestrations that used to live in
+`pipe/maya/playblast/shot/dialog.py` and
 `pipe/maya/playblast/turnaround/dialog.py`. Each call site now passes a
 `PlayblastUploadIntent` describing what the user picked in the UI; this
 module handles version-name fallback, target resolution, the upload itself,
