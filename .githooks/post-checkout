@@ -2,7 +2,7 @@
 
 set -e
 
-PROD_DIR=/groups/lantern/.pipeline
+PROD_DIR=$(realpath /groups/lantern/.pipeline)
 LOCAL_DIR=$(git rev-parse --show-toplevel)
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 

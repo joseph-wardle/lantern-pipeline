@@ -9,11 +9,14 @@ command -v uv >/dev/null 2>&1 || {
     pipx install uv
 }
 
-PROD_DIR=/groups/sandwich/.pipeline
+PROD_DIR=$(realpath /groups/lantern/.pipeline)
 LOCAL_DIR=$(git rev-parse --show-toplevel)
 
 if [[ "${PROD_DIR}" == "${LOCAL_DIR}" ]]; then
-    uv sync --frozen --no-dev
+    # The deploy venv is shared: its interpreter must live on the share,
+    # not in the home directory of whoever ran the sync.
+    UV_PYTHON_INSTALL_DIR="${PROD_DIR}/.python" \
+        uv sync --frozen --no-dev --managed-python --python 3.11
 else
     uv sync --frozen
 fi
