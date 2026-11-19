@@ -1,0 +1,18 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.1",
+	"FriendlyName": "Lantern Pipeline",
+	"Description": "Lantern of Souls studio pipeline tools and editor integration.",
+	"Category": "Pipeline",
+	"CreatedBy": "Lantern of Souls Capstone",
+	"EnabledByDefault": true,
+	"CanContainContent": true,
+	"Installed": false,
+	"Plugins": [
+		{
+			"Name": "PythonScriptPlugin",
+			"Enabled": true
+		}
+	]
+}

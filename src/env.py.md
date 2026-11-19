@@ -25,6 +25,8 @@ class Executables:
     oiiotool: Path            # absolute path to the oiiotool executable (such as the one bundled with Houdini)
     substance_designer: Path  # absolute path to the Substance Designer executable
     substance_painter: Path   # absolute path to the Substance Painter executable
+    unreal: Path | None       # absolute path to the UnrealEditor executable (Windows only; None elsewhere)
+    unreal_cmd: Path | None   # absolute path to the UnrealEditor-Cmd executable for headless/commandlet runs (Windows only; None elsewhere)
 
 
 @dataclass
