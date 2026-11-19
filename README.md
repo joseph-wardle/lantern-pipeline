@@ -7,8 +7,7 @@ An OS-agnostic, portable, extensible 3D pipeline for the BYU Center for Animatio
 ## Repo structure
 ```
 lantern-pipeline/
-├── desktop_launchers      # .desktop files for the DCC launchers; installed via install_desktop_launchers.py
-├── install_desktop_launchers.py
+├── install_desktop_launchers.py  # Generates the Linux .desktop launchers (--software publishes them to the share)
 ├── LICENSE
 ├── resources              # First-party non-Python data (OCIO, USD kinds, icons, splash, hdri, tex, sbs)
 ├── src
