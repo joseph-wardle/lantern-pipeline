@@ -113,6 +113,11 @@ def get_documentation_path(page: str | None = None) -> str:
     return str(Path(root) / page)
 
 
+def get_ocio_config_path() -> Path:
+    """The show OCIO config; it lives on the production share, not in the repo."""
+    return get_production_path() / "color_configuration/sandwich-v02/config.ocio"
+
+
 def get_previs_path() -> Path:
     return get_production_path().parent / "previs"
 

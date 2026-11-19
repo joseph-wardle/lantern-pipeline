@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     import typing
 
 from core.util.paths import (
+    get_ocio_config_path,
     get_production_path,
     get_shared_telemetry_spool_dir,
     resolve_mapped_path,
@@ -96,7 +97,7 @@ class HoudiniLauncher(Launcher):
             "JOB": str(resolve_mapped_path(get_production_path())),
             # Ensure LD_LIBRARY_PATH is unset to allow nesting pipe instances
             "LD_LIBRARY_PATH": None,
-            "OCIO": str(repo_root / "resources/ocio/sandwich-v01/config.ocio"),
+            "OCIO": str(get_ocio_config_path()),
             "PIPE_LOG_LEVEL": log.getEffectiveLevel(),
             "PIPE_TELEMETRY_SPOOL_DIR": str(get_shared_telemetry_spool_dir()),
             # Root for vendored Houdini packages (axiom)

@@ -8,7 +8,11 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     import typing
 
-from core.util.paths import get_shared_telemetry_spool_dir, resolve_mapped_path
+from core.util.paths import (
+    get_ocio_config_path,
+    get_shared_telemetry_spool_dir,
+    resolve_mapped_path,
+)
 from env import Executables
 from framework.launcher import Launcher
 
@@ -24,18 +28,13 @@ class SubstancePainterLauncher(Launcher):
         this_path = Path(__file__).resolve()
         # this_path = `<repo>/src/dcc/substance_painter/launch.py`
         src_path = this_path.parents[2]
-        repo_root = src_path.parent
 
         system = platform.system()
 
         env_vars: typing.Mapping[str, int | str | None] | None
         env_vars = {
             "DCC": str(this_path.parent.name),
-            "OCIO": str(
-                resolve_mapped_path(
-                    repo_root / "resources/ocio/sandwich-v01/config.ocio"
-                )
-            ),
+            "OCIO": str(resolve_mapped_path(get_ocio_config_path())),
             "PIPE_LOG_LEVEL": log.getEffectiveLevel(),
             "PIPE_TELEMETRY_SPOOL_DIR": str(get_shared_telemetry_spool_dir()),
             "PYTHONPATH": str(src_path),

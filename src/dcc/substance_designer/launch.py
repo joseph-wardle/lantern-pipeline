@@ -4,7 +4,7 @@ import logging
 import platform
 from pathlib import Path
 
-from core.util.paths import get_shared_telemetry_spool_dir
+from core.util.paths import get_ocio_config_path, get_shared_telemetry_spool_dir
 from env import Executables
 from framework.launcher import Launcher
 
@@ -20,13 +20,12 @@ class SubstanceDesignerLauncher(Launcher):
         this_path = Path(__file__).resolve()
         # this_path = `<repo>/src/dcc/substance_designer/launch.py`
         src_path = this_path.parents[2]
-        repo_root = src_path.parent
 
         system = platform.system()
 
         env_vars = {
             "DCC": str(this_path.parent.name),
-            "OCIO": str(repo_root / "resources/ocio/sandwich-v01/config.ocio"),
+            "OCIO": str(get_ocio_config_path()),
             "PIPE_TELEMETRY_SPOOL_DIR": str(get_shared_telemetry_spool_dir()),
             "PYTHONPATH": str(src_path),
             "QT_PLUGIN_PATH": "",

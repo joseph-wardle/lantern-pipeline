@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
+from core.util.paths import get_ocio_config_path
 from env import Executables
 from framework.launcher import Launcher
 
@@ -27,7 +28,7 @@ class BlenderLauncher(Launcher):
             ),
             "BLENDER_SYSTEM_EXTENSIONS": str(this_path.parent / "extensions"),
             "BLENDER_SYSTEM_SCRIPTS": str(this_path.parent / "site"),
-            "OCIO": str(repo_root / "resources/ocio/sandwich-v01/config.ocio"),
+            "OCIO": str(get_ocio_config_path()),
         }
 
         launch_command = str(Executables.blender)
