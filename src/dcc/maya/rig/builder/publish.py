@@ -145,6 +145,25 @@ class RigPublisher:
         self.publish_progress.finish_step()
         return True
 
+    def _fbx_export(self, rig: RigDefinition) -> None:
+        from .fbx_publish import publish_ue_rig
+
+        publish_asset = self._conn.get_asset(name=rig.name)
+        publish_asset_paths = paths_for_asset(publish_asset)
+
+        rig_publish_path = publish_asset_paths.rig_path
+        fbx_publish_path = rig_publish_path / f"{rig.name}.fbx"
+
+        fbx_publish_path.parent.mkdir(parents=True, exist_ok=True)
+
+        publish_ue_rig(
+            path=fbx_publish_path,
+            model="geo",
+            skel="root_C0_root_jnt",
+        )
+
+        log.info(f"PUBLISH: {rig.name} FBX successfully exported to {fbx_publish_path}")
+
     def build_test_and_publish(
         self, rig: RigDefinition, publish_message: str | None = None
     ):
@@ -161,3 +180,4 @@ class RigPublisher:
         else:
             self._publish_rig(rig, publish_message)
             self._publish_rig_model(rig)
+            self._fbx_export(rig)
